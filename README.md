@@ -17,7 +17,7 @@
 
 This is **Book 3** — the final book — of the **AWS Mastery Series — From Zero to Developer Associate**. It takes the AWS Certified Developer Associate (DVA-C02) exam to **advanced depth**: the patterns, edge cases, and architectural trade-offs that separate a pass from a confident pass. Written for backend developers who have already covered the fundamentals (Book 1: CLF-C02) and the intermediate developer stack (Book 2: DVA-C02 Intermediate) and are ready for the deep end.
 
-> **Prerequisite:** Complete [Book 2 — AWS Developer Associate (DVA-C02) Intermediate](../DVA-C02/) before starting this book.
+> **Prerequisite:** Complete [Book 2 — AWS Developer Associate (DVA-C02) Intermediate](https://fzee07.github.io/aws-dva-c02-guide/) before starting this book.
 
 ---
 
