@@ -1,0 +1,2274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AWS Developer Associate — Advanced Guide (DVA-C02) · AWS Mastery Series Book 3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+/* ============================================================
+   DESIGN TOKENS
+   ============================================================ */
+:root{
+  --navy:#232F3E;
+  --navy-bar:#1b2733;
+  --navy-deep:#1a2430;
+  --orange:#FF9900;
+  --orange-bright:#FFA31A;
+  --ink:#2C2C2C;
+  --ink-soft:#5A6675;
+  --blue:#1565C0;
+  --line:#DEE3EA;
+  --bg-page:#FBFCFD;
+  --sidebar-w:280px;
+  --topbar-h:52px;
+  --content-max:820px;
+  --serif: 'Sora', system-ui, sans-serif;
+  --sans: 'Inter', system-ui, sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+}
+
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  font-family:var(--sans);
+  color:var(--ink);
+  background:var(--bg-page);
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+/* ============================================================
+   TOP BAR (fixed)
+   ============================================================ */
+.topbar{
+  position:fixed;top:0;left:0;right:0;height:var(--topbar-h);
+  background:var(--navy-bar);
+  display:flex;align-items:center;gap:24px;
+  padding:0 24px;z-index:100;
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.brand{
+  font-family:var(--serif);font-weight:400;font-size:15px;
+  letter-spacing:.2px;white-space:nowrap;color:#fff;
+}
+.brand .o{color:var(--orange);font-weight:700;}
+.jump-wrap{position:relative;}
+.jump-select{
+  appearance:none;-webkit-appearance:none;
+  background:rgba(255,255,255,.02);
+  color:#cdd3da;
+  font-family:var(--sans);font-size:13px;font-weight:400;
+  border:1px solid var(--orange);
+  border-radius:6px;
+  padding:7px 36px 7px 14px;
+  min-width:240px;cursor:pointer;outline:none;
+}
+.jump-select option{background:#fff;color:var(--ink);}
+.jump-wrap::after{
+  content:"";position:absolute;right:18px;top:50%;
+  width:9px;height:9px;border-right:2px solid var(--orange);
+  border-bottom:2px solid var(--orange);
+  transform:translateY(-70%) rotate(45deg);pointer-events:none;
+}
+.book-label{
+  margin-left:auto;color:#B6BFCC;font-size:12.5px;font-weight:400;
+  letter-spacing:.3px;white-space:nowrap;
+}
+
+/* ============================================================
+   SIDEBAR (fixed)
+   ============================================================ */
+.sidebar{
+  position:fixed;top:var(--topbar-h);left:0;bottom:0;width:var(--sidebar-w);
+  background:#fff;border-right:1px solid var(--line);
+  overflow-y:auto;z-index:90;padding:24px 0 34px;
+}
+.sidebar::-webkit-scrollbar{width:9px;}
+.sidebar::-webkit-scrollbar-thumb{background:#d3dae2;border-radius:6px;}
+.sb-head{
+  font-family:var(--serif);font-weight:700;font-size:12px;
+  letter-spacing:2px;color:#7b8794;text-transform:uppercase;
+  padding:0 24px 16px;margin-bottom:18px;
+  border-bottom:1px solid var(--line);
+}
+.sb-group-label{
+  font-family:var(--serif);font-weight:600;font-size:11px;
+  letter-spacing:1.5px;color:#9aa5b1;text-transform:uppercase;
+  padding:14px 24px 8px;margin:0;
+}
+.sb-link{
+  display:flex;align-items:center;gap:14px;
+  padding:7px 24px;font-size:13.5px;line-height:1.45;color:var(--navy);
+  text-decoration:none;cursor:pointer;font-weight:500;
+  border-left:3px solid transparent;transition:background .12s,border-color .12s;
+}
+.sb-link:hover{background:#f4f7fa;}
+.sb-link .dash{color:var(--orange);font-weight:700;}
+.sb-link .num{
+  color:var(--orange);font-weight:700;font-size:12px;
+  font-family:var(--serif);min-width:22px;
+}
+.sb-link.active{
+  background:#FFF6E9;border-left-color:var(--orange);font-weight:600;
+}
+.sb-link.active .title{color:var(--navy);}
+
+/* ============================================================
+   CONTENT WRAPPER
+   ============================================================ */
+.content{
+  margin-left:var(--sidebar-w);margin-top:var(--topbar-h);
+}
+.page{
+  scroll-margin-top:var(--topbar-h);
+}
+/* interior page shell */
+.page-interior{
+  background:var(--bg-page);
+  padding:78px 64px 30px;
+}
+.page-interior .inner{max-width:var(--content-max);margin:0 auto;}
+
+/* page footer */
+.pg-footer{
+  max-width:var(--content-max);margin:64px auto 0;
+  padding:20px 0 0;border-top:1px solid var(--line);
+  text-align:center;color:#9aa5b1;font-size:13px;letter-spacing:.02em;
+}
+
+/* ============================================================
+   TYPOGRAPHY — interior
+   ============================================================ */
+.eyebrow{
+  font-family:var(--serif);font-weight:700;font-size:14px;
+  letter-spacing:.2em;color:var(--orange);text-transform:uppercase;
+  margin:0 0 18px;
+}
+.chap-num{
+  font-family:var(--serif);font-weight:700;font-size:14px;
+  letter-spacing:.22em;color:var(--orange);text-transform:uppercase;
+  margin:0 0 14px;
+}
+h1.page-title{
+  font-family:var(--serif);font-weight:700;font-size:40px;
+  color:var(--navy);line-height:1.2;margin:0 0 16px;letter-spacing:-.015em;
+  text-wrap:balance;
+}
+.byline{
+  font-size:18px;color:var(--ink-soft);margin:0 0 8px;font-weight:400;
+  line-height:1.5;
+}
+.title-rule{
+  width:70px;height:4px;border-radius:3px;margin:26px 0 38px;
+  background:linear-gradient(90deg,var(--orange),rgba(255,153,0,0));
+}
+h2.sec{
+  font-family:var(--serif);font-weight:700;font-size:26px;
+  color:var(--navy);line-height:1.3;margin:46px 0 18px;letter-spacing:-.01em;
+}
+h3.sub{
+  font-family:var(--serif);font-weight:600;font-size:19px;
+  color:var(--blue);line-height:1.4;margin:34px 0 14px;
+}
+.page-interior p{
+  font-size:18px;line-height:1.8;color:var(--ink);margin:0 0 18px;
+  text-wrap:pretty;
+}
+.page-interior strong{font-weight:700;color:#1d2733;}
+.section-divider{
+  border:0;border-top:1px solid var(--line);margin:44px 0;
+}
+
+/* lists */
+.book-list{margin:0 0 18px;padding:0;list-style:none;}
+.book-list li{
+  position:relative;font-size:18px;line-height:1.75;color:var(--ink);
+  padding:0 0 12px 30px;
+}
+.book-list li::before{
+  content:"";position:absolute;left:4px;top:12px;
+  width:7px;height:7px;border-radius:50%;background:var(--orange);
+}
+.book-list li strong{color:#1d2733;}
+
+/* ============================================================
+   TABLES
+   ============================================================ */
+.tbl-wrap{margin:24px 0 28px;overflow-x:auto;border-radius:10px;
+  border:1px solid var(--line);box-shadow:0 1px 2px rgba(20,40,60,.04);}
+table.book{
+  width:100%;border-collapse:collapse;font-size:15.5px;background:#fff;
+}
+table.book thead th{
+  background:var(--navy);color:#fff;font-weight:700;text-align:left;
+  padding:14px 18px;font-family:var(--sans);font-size:15px;
+  border-bottom:1.5px solid var(--orange);letter-spacing:.01em;
+  vertical-align:top;
+}
+table.book td{
+  padding:13px 18px;border-bottom:.5px solid var(--line);
+  border-right:.5px solid var(--line);color:var(--ink);
+  line-height:1.6;vertical-align:top;
+}
+table.book td:last-child{border-right:0;}
+table.book tbody tr:nth-child(even){background:#F0F4F8;}
+table.book tbody tr:last-child td{border-bottom:0;}
+table.book td strong{color:#1d2733;}
+table.book code{
+  font-family:var(--mono);font-size:13px;background:#eef1f5;
+  padding:1px 5px;border-radius:4px;color:#324;
+}
+
+/* ============================================================
+   CALLOUT BOXES
+   ============================================================ */
+.callout{
+  border-radius:10px;padding:20px 24px;margin:26px 0;
+  border-left:4px solid;position:relative;
+}
+.callout .c-label{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--serif);font-weight:700;font-size:12.5px;
+  letter-spacing:.13em;text-transform:uppercase;margin-bottom:10px;
+}
+.callout .c-tag{
+  font-weight:600;letter-spacing:.04em;
+}
+.callout p{font-size:16px !important;line-height:1.72 !important;margin:0 !important;color:#34404c !important;}
+.callout p + p{margin-top:12px !important;}
+.callout .c-icon{
+  width:20px;height:20px;flex:0 0 20px;display:inline-flex;
+  align-items:center;justify-content:center;border-radius:50%;
+  font-size:12px;color:#fff;font-weight:700;
+}
+
+/* Exam Trap — red */
+.callout.exam{background:#FFF0F0;border-left-color:#C62828;}
+.callout.exam .c-label{color:#C62828;}
+.callout.exam .c-icon{background:#C62828;}
+/* Backend Dev Angle — purple */
+.callout.backend{background:#F3E5F5;border-left-color:#6A1B9A;}
+.callout.backend .c-label{color:#6A1B9A;}
+.callout.backend .c-icon{background:#6A1B9A;}
+/* Tip — green */
+.callout.tip{background:#F0FFF4;border-left-color:#2E7D32;}
+.callout.tip .c-label{color:#2E7D32;}
+.callout.tip .c-icon{background:#2E7D32;}
+/* Note — blue */
+.callout.note{background:#E8F4FD;border-left-color:#1565C0;}
+.callout.note .c-label{color:#1565C0;}
+.callout.note .c-icon{background:#1565C0;}
+/* Hands-On — orange */
+.callout.handson{background:#FFF8E1;border-left-color:#E65100;}
+.callout.handson .c-label{color:#E65100;}
+.callout.handson .c-icon{background:#E65100;}
+
+/* the backend "Node.js" chip */
+.lang-chip{
+  font-family:var(--sans);font-weight:600;font-size:11px;letter-spacing:.04em;
+  background:#6A1B9A;color:#fff;padding:2px 9px;border-radius:20px;
+  text-transform:none;margin-left:4px;
+}
+
+/* ============================================================
+   PROGRESS CHECKLIST
+   ============================================================ */
+.checklist{
+  background:#E8F5E9;border:1px solid #2E7D32;border-radius:12px;
+  padding:22px 26px;margin:34px 0 8px;
+}
+.checklist .cl-title{
+  font-family:var(--serif);font-weight:700;font-size:13px;
+  letter-spacing:.14em;text-transform:uppercase;color:#2E7D32;
+  margin-bottom:14px;display:flex;align-items:center;gap:9px;
+}
+.checklist ul{list-style:none;margin:0;padding:0;}
+.checklist li{
+  position:relative;padding:7px 0 7px 34px;font-size:16px;
+  line-height:1.6;color:#22402a;
+}
+.checklist li::before{
+  content:"";position:absolute;left:0;top:9px;width:18px;height:18px;
+  border:2px solid #2E7D32;border-radius:4px;background:#fff;
+}
+
+/* ============================================================
+   CODE BLOCKS
+   ============================================================ */
+.code{
+  background:#1e1e2e;color:#cdd6f4;font-family:var(--mono);
+  font-size:13.5px;line-height:1.65;border-radius:10px;
+  border-left:4px solid var(--blue);padding:20px 22px;margin:22px 0;
+  overflow-x:auto;white-space:pre;
+  box-shadow:0 4px 18px rgba(20,30,50,.18);
+}
+.code .cmt{color:#7a87b0;}
+.code .str{color:#a6e3a1;}
+.code .key{color:#f38ba8;}
+.code .fn{color:#89b4fa;}
+.code .num{color:#fab387;}
+
+/* ============================================================
+   COVER PAGE
+   ============================================================ */
+.cover{
+  background:var(--navy);position:relative;overflow:hidden;
+  min-height:calc(100vh - var(--topbar-h));
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:80px 32px 100px;text-align:center;
+}
+.cover .deco{position:absolute;border-radius:50%;pointer-events:none;
+  border:1px solid rgba(255,153,0,.10);}
+.cover .deco.d1{width:920px;height:920px;top:-260px;left:-220px;}
+.cover .deco.d2{width:640px;height:640px;top:-120px;left:-80px;border-color:rgba(255,153,0,.06);}
+.cover .deco.d3{width:1100px;height:1100px;bottom:-520px;right:-280px;border-color:rgba(255,153,0,.07);}
+.cover .deco.d4{width:520px;height:520px;top:30%;right:-160px;border-color:rgba(255,153,0,.05);}
+.cover .cov-inner{position:relative;z-index:2;max-width:920px;width:100%;
+  display:flex;flex-direction:column;align-items:center;}
+.cov-series{
+  font-family:var(--serif);font-weight:700;font-size:14px;
+  letter-spacing:4px;color:var(--orange);text-transform:uppercase;
+  margin:0 0 36px;line-height:1.5;
+}
+.cov-badge{
+  display:inline-flex;align-items:center;gap:12px;
+  border:1px solid rgba(255,153,0,.4);background:rgba(255,153,0,.05);
+  border-radius:999px;padding:10px 26px;margin:0 0 48px;
+  color:#cfd6de;font-size:14px;font-weight:400;letter-spacing:.5px;
+}
+.cov-badge .dot{width:8px;height:8px;border-radius:50%;background:var(--orange);
+  box-shadow:0 0 10px rgba(255,153,0,.7);}
+.cov-badge .sep{color:#5d6b78;}
+.cov-title{
+  font-family:var(--serif);font-weight:800;font-size:clamp(2.2rem,5vw,3.2rem);line-height:1.1;
+  margin:0;max-width:680px;letter-spacing:-.01em;text-wrap:balance;
+}
+.cov-title .l1{color:#fff;display:block;}
+.cov-title .l2{color:var(--orange);display:block;}
+.cov-desc{
+  font-size:19px;line-height:1.6;color:#C3CCD7;max-width:640px;margin:32px auto 0;font-weight:400;
+}
+.cov-rule{
+  width:60px;height:3px;border-radius:2px;margin:48px 0 32px;
+  background:linear-gradient(90deg,var(--orange),rgba(255,153,0,0));
+}
+.cov-meta{
+  display:flex;align-items:center;justify-content:center;gap:0;margin:0;
+}
+.cov-meta .col{padding:0 40px;text-align:center;
+  border-right:1px solid rgba(255,255,255,.12);}
+.cov-meta .col:last-child{border-right:0;}
+.cov-meta .k{
+  font-family:var(--serif);font-weight:500;font-size:11px;letter-spacing:.1em;
+  color:rgba(255,255,255,.35);text-transform:uppercase;margin-bottom:4px;
+}
+.cov-meta .v{font-family:var(--serif);font-weight:600;font-size:14px;color:#fff;letter-spacing:.2px;}
+.cov-copy{position:absolute;bottom:24px;left:0;right:0;text-align:center;z-index:2;
+  color:rgba(255,255,255,.25);font-size:11.5px;letter-spacing:.2px;margin:0;}
+
+/* ============================================================
+   COPYRIGHT PAGE
+   ============================================================ */
+.copyright-page p{font-size:16px;line-height:1.85;color:#3a4552;}
+.copyright-page .legal{font-size:15px;color:var(--ink-soft);}
+.copyright-page .cr-title{
+  font-family:var(--serif);font-weight:700;font-size:22px;color:var(--navy);
+  margin:0 0 6px;line-height:1.4;
+}
+.copyright-page .cr-sub{font-size:17px;color:var(--ink-soft);margin:0 0 30px;}
+
+/* ============================================================
+   TABLE OF CONTENTS
+   ============================================================ */
+.toc-chapter{margin:0 0 26px;}
+.toc-ch-row{
+  display:flex;align-items:baseline;gap:16px;
+  padding-bottom:8px;
+}
+.toc-ch-row .tnum{
+  font-family:var(--serif);font-weight:700;font-size:20px;color:var(--orange);
+  min-width:34px;
+}
+.toc-ch-row .tname{
+  font-family:var(--serif);font-weight:700;font-size:20px;color:var(--navy);
+  text-decoration:none;
+}
+.toc-ch-row .tname:hover{color:var(--orange);}
+.toc-ch-row .tpg{margin-left:auto;color:#9aa5b1;font-size:15px;font-weight:600;
+  font-family:var(--mono);}
+.toc-sub{list-style:none;margin:6px 0 0;padding:0 0 0 50px;}
+.toc-sub li{
+  display:flex;align-items:baseline;gap:12px;
+  font-size:16px;color:var(--ink-soft);padding:5px 0;
+}
+.toc-sub li .dots{flex:1;border-bottom:1px dotted #c4cdd6;transform:translateY(-4px);}
+.toc-sub li .spg{color:#9aa5b1;font-size:14px;font-family:var(--mono);}
+.toc-divider{border:0;border-top:1px solid var(--line);margin:30px 0;}
+.toc-meta-row{font-family:var(--serif);font-weight:700;font-size:18px;color:var(--navy);
+  margin:22px 0 10px;}
+
+/* ============================================================
+   QUESTION BANK
+   ============================================================ */
+.qb-part-head{
+  font-family:var(--serif);font-weight:700;font-size:24px;color:var(--navy);
+  margin:50px 0 6px;padding-top:8px;
+}
+.qb-part-sub{font-size:16px;color:var(--ink-soft);margin:0 0 14px;font-style:italic;}
+.q-card{
+  border:1px solid var(--line);border-radius:12px;background:#fff;
+  padding:24px 26px;margin:22px 0;box-shadow:0 1px 3px rgba(20,40,60,.04);
+}
+.q-num{
+  font-family:var(--serif);font-weight:700;font-size:15px;color:var(--orange);
+  letter-spacing:.04em;margin-bottom:10px;
+}
+.q-stem{font-size:17px;line-height:1.7;color:#1d2733;margin:0 0 18px;font-weight:500;}
+.q-options{list-style:none;margin:0 0 18px;padding:0;display:flex;flex-direction:column;gap:10px;}
+.q-options li{
+  display:flex;gap:13px;align-items:flex-start;
+  border:1px solid var(--line);border-radius:9px;padding:12px 16px;
+  font-size:16px;line-height:1.55;color:var(--ink);background:#fcfdfe;
+}
+.q-options li .opt{font-weight:700;color:var(--blue);min-width:18px;font-family:var(--serif);}
+.answer{
+  background:#F0FFF4;border:1px solid #2E7D32;border-radius:10px;
+  padding:16px 20px;
+}
+.answer .a-label{font-weight:700;color:#2E7D32;font-size:15px;letter-spacing:.02em;}
+.answer p{font-size:15.5px !important;line-height:1.7 !important;color:#274430 !important;margin:8px 0 0 !important;}
+.q-saq .answer{margin-top:4px;}
+
+/* ============================================================
+   FINAL PAGE
+   ============================================================ */
+.final-page{
+  background:var(--navy);color:#fff;text-align:center;
+  padding:100px 50px;min-height:calc(100vh - var(--topbar-h));
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
+}
+.final-page .deco{position:absolute;border-radius:50%;border:1px solid rgba(255,153,0,.08);pointer-events:none;}
+.final-inner{position:relative;z-index:2;max-width:760px;}
+.final-page h2{
+  font-family:var(--serif);font-weight:800;font-size:46px;color:#fff;
+  line-height:1.15;margin:0 0 28px;letter-spacing:-.02em;
+}
+.final-page h2 .o{color:var(--orange);}
+.final-page p{font-size:20px;line-height:1.7;color:#AAB4C0;margin:0 0 22px;}
+.final-creds{
+  border:1px solid rgba(255,153,0,.35);background:rgba(255,153,0,.05);
+  border-radius:14px;padding:26px 34px;margin:38px 0 30px;display:inline-block;
+}
+.final-creds .fc-k{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#7c8895;font-weight:600;margin-bottom:12px;}
+.final-creds .fc-v{font-family:var(--serif);font-weight:700;font-size:19px;color:var(--orange);line-height:1.6;}
+.final-byline{color:#6f7c8a;font-size:15px;margin-top:10px;}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media(max-width:1100px){
+  :root{--sidebar-w:280px;}
+}
+@media(max-width:860px){
+  .sidebar{transform:translateX(-100%);transition:transform .2s;}
+  .content{margin-left:0;}
+  .book-label{display:none;}
+  .jump-select{min-width:160px;}
+  .page-interior{padding:54px 26px 24px;}
+  .cov-meta{flex-direction:column;gap:16px;}
+  .cov-meta .col{padding:0 22px;border-right:0;}
+}
+
+/* ============================================================
+   GLOSSARY
+   ============================================================ */
+.glossary{margin:8px 0 0;}
+.glossary .gl{
+  padding:16px 0;border-bottom:1px solid var(--line);
+}
+.glossary .gl:last-child{border-bottom:0;}
+.glossary dt{
+  font-family:var(--serif);font-weight:700;font-size:18px;color:var(--navy);
+  margin-bottom:5px;
+}
+.glossary dd{
+  margin:0;font-size:16.5px;line-height:1.7;color:#3a4552;
+}
+
+/* ============================================================
+   PRINT
+   ============================================================ */
+@media print{
+  .topbar,.sidebar{display:none !important;}
+  .content{margin:0 !important;}
+  .page-interior{padding:0 !important;}
+  .page{page-break-before:always;}
+  #cover{page-break-before:avoid;}
+  .callout,.tbl-wrap,.code,.checklist,.q-card{page-break-inside:avoid;}
+  body{background:#fff;}
+  .cover,.final-page{min-height:auto;}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+}
+</style>
+</head>
+<body>
+
+<!-- ============================ TOP BAR ============================ -->
+<header class="topbar">
+  <div class="brand"><span class="o">AWS Mastery</span> Series</div>
+  <div class="jump-wrap">
+    <select class="jump-select" id="jumpSelect" aria-label="Jump to chapter">
+      <option value="">Jump to chapter…</option>
+      <option value="preface">Preface</option>
+      <option value="how-to-use">How to Use This Book</option>
+      <option value="toc">Table of Contents</option>
+      <option value="ch-1">01 · Advanced Lambda Patterns</option>
+      <option value="ch-2">02 · AWS Step Functions</option>
+      <option value="ch-3">03 · Advanced DynamoDB</option>
+      <option value="ch-4">04 · Advanced API Gateway</option>
+      <option value="ch-5">05 · Event-Driven Architecture at Scale</option>
+      <option value="ch-6">06 · Advanced CloudFormation</option>
+      <option value="ch-7">07 · Advanced Security</option>
+      <option value="ch-8">08 · Performance Optimization</option>
+      <option value="ch-9">09 · Cost Optimization</option>
+      <option value="ch-10">10 · Observability and Troubleshooting</option>
+      <option value="ch-11">11 · Resilience and Error Handling</option>
+      <option value="ch-12">12 · Exam Mastery and Mock Simulation</option>
+      <option value="appendix-a">Appendix A · Cheat Sheet</option>
+      <option value="appendix-b">Appendix B · Glossary</option>
+      <option value="appendix-c">Appendix C · Question Bank</option>
+    </select>
+  </div>
+  <div class="book-label">Book 3: AWS Developer Associate (DVA-C02)</div>
+</header>
+
+<!-- ============================ SIDEBAR ============================ -->
+<nav class="sidebar" id="sidebar">
+  <div class="sb-head">Contents</div>
+
+  <div class="sb-group-label">Front Matter</div>
+  <a class="sb-link" data-target="preface"><span class="dash">—</span><span class="title">Preface</span></a>
+  <a class="sb-link" data-target="how-to-use"><span class="dash">—</span><span class="title">How to Use</span></a>
+  <a class="sb-link" data-target="toc"><span class="dash">—</span><span class="title">Table of Contents</span></a>
+
+  <div class="sb-group-label">Chapters</div>
+  <a class="sb-link" data-target="ch-1"><span class="num">01</span><span class="title">Advanced Lambda Patterns</span></a>
+  <a class="sb-link" data-target="ch-2"><span class="num">02</span><span class="title">AWS Step Functions</span></a>
+  <a class="sb-link" data-target="ch-3"><span class="num">03</span><span class="title">Advanced DynamoDB</span></a>
+  <a class="sb-link" data-target="ch-4"><span class="num">04</span><span class="title">Advanced API Gateway</span></a>
+  <a class="sb-link" data-target="ch-5"><span class="num">05</span><span class="title">Event-Driven Architecture</span></a>
+  <a class="sb-link" data-target="ch-6"><span class="num">06</span><span class="title">Advanced CloudFormation</span></a>
+  <a class="sb-link" data-target="ch-7"><span class="num">07</span><span class="title">Advanced Security</span></a>
+  <a class="sb-link" data-target="ch-8"><span class="num">08</span><span class="title">Performance Optimization</span></a>
+  <a class="sb-link" data-target="ch-9"><span class="num">09</span><span class="title">Cost Optimization</span></a>
+  <a class="sb-link" data-target="ch-10"><span class="num">10</span><span class="title">Observability &amp; Troubleshooting</span></a>
+  <a class="sb-link" data-target="ch-11"><span class="num">11</span><span class="title">Resilience &amp; Error Handling</span></a>
+  <a class="sb-link" data-target="ch-12"><span class="num">12</span><span class="title">Exam Mastery &amp; Mock Sim</span></a>
+
+  <div class="sb-group-label">Appendices</div>
+  <a class="sb-link" data-target="appendix-a"><span class="num">A</span><span class="title">Master Cheat Sheet</span></a>
+  <a class="sb-link" data-target="appendix-b"><span class="num">B</span><span class="title">Glossary</span></a>
+  <a class="sb-link" data-target="appendix-c"><span class="num">QB</span><span class="title">Question Bank</span></a>
+</nav>
+
+<!-- ============================ CONTENT ============================ -->
+<main class="content">
+
+<!-- ===== COVER ===== -->
+<section class="page cover" id="cover">
+  <div class="deco d1"></div>
+  <div class="deco d2"></div>
+  <div class="deco d3"></div>
+  <div class="deco d4"></div>
+  <div class="cov-inner">
+    <p class="cov-series">AWS Mastery Series &nbsp;·&nbsp; From Zero to Developer Associate</p>
+    <div class="cov-badge">
+      <span class="dot"></span>
+      <span>Book 3 of 3</span><span class="sep">·</span><span>DVA-C02</span><span class="sep">·</span><span>Advanced Guide</span>
+    </div>
+    <h1 class="cov-title">
+      <span class="l1">AWS Developer Associate</span>
+      <span class="l2">Advanced Guide</span>
+    </h1>
+    <p class="cov-desc">Step Functions, event-driven architecture at scale, single-table DynamoDB design, advanced security, performance and cost optimization — the final climb to Developer Associate.</p>
+    <div class="cov-rule"></div>
+    <div class="cov-meta">
+      <div class="col"><div class="k">Author</div><div class="v">Faizan H.</div></div>
+      <div class="col"><div class="k">Edition</div><div class="v">First Edition</div></div>
+      <div class="col"><div class="k">Exam</div><div class="v">DVA-C02</div></div>
+    </div>
+  </div>
+  <p class="cov-copy">© 2025 Faizan H. All Rights Reserved</p>
+</section>
+
+<!-- ===== COPYRIGHT ===== -->
+<section class="page page-interior copyright-page" id="copyright">
+  <div class="inner">
+    <p class="eyebrow">AWS Mastery Series</p>
+    <p class="cr-title">AWS Mastery Series — From Zero to Developer Associate</p>
+    <p class="cr-sub">Book 3: AWS Developer Associate (DVA-C02) — Advanced Guide · First Edition</p>
+    <p><strong>Author:</strong> Faizan H.<br/>© 2025 Faizan H. All rights reserved.</p>
+    <p class="legal">No part of this publication may be reproduced, distributed, or transmitted in any form or by any means, including photocopying, recording, or other electronic or mechanical methods, without the prior written permission of the author.</p>
+    <p class="legal">Amazon Web Services (AWS), the AWS logo, and all AWS service names are trademarks of Amazon.com, Inc. or its affiliates. This book is an independent study guide and is not affiliated with, endorsed by, or sponsored by Amazon Web Services.</p>
+    <p class="legal">Printed and published independently.</p>
+    <p class="legal">For permissions and inquiries: <strong><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="5a3935342e3b392e1a373c323b29293b34742d352831">[email&#160;protected]</a></strong></p>
+  </div>
+  <div class="pg-footer">AWS Mastery Series &nbsp;|&nbsp; Book 3: DVA-C02 &nbsp;|&nbsp; Author: Faizan H.</div>
+</section>
+
+<!-- ===== PREFACE ===== -->
+<section class="page page-interior" id="preface">
+  <div class="inner">
+    <p class="eyebrow">AWS Mastery Series</p>
+    <h1 class="page-title">Preface</h1>
+    <p class="byline">The final book in the series — depth, judgement, and the hardest scenarios.</p>
+    <div class="title-rule"></div>
+    <p>This is the final book in the AWS Mastery Series. If you have worked through Book 1 (Cloud Practitioner) and Book 2 (Developer Associate, Intermediate), you already have a strong command of the AWS developer stack. This book takes you the rest of the way.</p>
+    <p>Book 3 is about depth and judgement. The DVA-C02 exam does not just test whether you know what a service does — it tests whether you can choose the right service, design the right architecture, and reason about trade-offs under realistic constraints. That is what separates someone who passed a certification from someone who can actually build on AWS.</p>
+    <p>This book assumes full familiarity with Books 1 and 2. There is no re-explaining what Lambda or DynamoDB is. Instead, we go deep: orchestration with Step Functions, single-table DynamoDB design, event-driven architecture at scale, advanced security patterns, and the performance and cost optimization decisions that real systems demand.</p>
+    <p>By the end of this book you will:</p>
+    <ul class="book-list">
+      <li>Design and orchestrate complex workflows with Step Functions</li>
+      <li>Model advanced single-table DynamoDB schemas around access patterns</li>
+      <li>Architect event-driven systems that scale and stay decoupled</li>
+      <li>Apply advanced security patterns: ABAC, federation, cross-account access</li>
+      <li>Make informed performance and cost optimization decisions at the architecture level</li>
+      <li>Walk into the DVA-C02 exam ready for its hardest scenario questions</li>
+    </ul>
+    <p>This is the last climb. Let's finish it. <strong>— Faizan H.</strong></p>
+  </div>
+  <div class="pg-footer">AWS Mastery Series &nbsp;|&nbsp; Book 3: DVA-C02 &nbsp;|&nbsp; Author: Faizan H.</div>
+</section>
+
+<!-- ===== HOW TO USE ===== -->
+<section class="page page-interior" id="how-to-use">
+  <div class="inner">
+    <p class="eyebrow">AWS Mastery Series</p>
+    <h1 class="page-title">How to Use This Book</h1>
+    <p class="byline">Match your study path to your goal, then drill the hard scenarios.</p>
+    <div class="title-rule"></div>
+    <div class="tbl-wrap">
+      <table class="book">
+        <thead><tr><th style="width:42%">Your Goal</th><th>Recommended Approach</th></tr></thead>
+        <tbody>
+          <tr><td>Final exam prep (already did Books 1–2)</td><td>Read 1 chapter/day, do all questions, take the mock exam twice</td></tr>
+          <tr><td>Deepen real-world architecture skills</td><td>Build each Hands-On walk-through in a real AWS account</td></tr>
+          <tr><td>Targeted weak-area review</td><td>Jump to specific chapters, focus on Exam Trap boxes</td></tr>
+          <tr><td>Final week before exam</td><td>Cheat Sheet daily + full mock simulation in Chapter 12</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h2 class="sec">Study Tips for the Advanced Level</h2>
+    <ul class="book-list">
+      <li>Advanced DVA-C02 questions are about the <strong>BEST</strong> answer, not the only correct one. Multiple options may work — pick the optimal.</li>
+      <li>For every architecture, ask: what fails, what scales, what costs money, what is the security boundary.</li>
+      <li>The mock exam in Chapter 12 is calibrated harder than the real exam on purpose.</li>
+      <li>If you can explain WHY a wrong answer is wrong, you understand the concept.</li>
+    </ul>
+  </div>
+  <div class="pg-footer">AWS Mastery Series &nbsp;|&nbsp; Book 3: DVA-C02 &nbsp;|&nbsp; Author: Faizan H.</div>
+</section>
+
+<!-- ===== TABLE OF CONTENTS ===== -->
+<section class="page page-interior" id="toc">
+  <div class="inner">
+    <p class="eyebrow">AWS Mastery Series</p>
+    <h1 class="page-title">Table of Contents</h1>
+    <p class="byline">Twelve chapters, three appendices, and a full question bank.</p>
+    <div class="title-rule"></div>
+
+    <div class="toc-chapter">
+      <div class="toc-ch-row"><span class="tnum">01</span><a class="tname" data-target="ch-1">Advanced Lambda Patterns</a><span class="tpg">8</span></div>
+      <ul class="toc-sub">
+        <li><span>1.1 Synchronous vs Asynchronous vs Stream Composition</span><span class="dots"></span><span class="spg">8</span></li>
+        <li><span>1.2 Fan-Out and Fan-In</span><span class="dots"></span><span class="spg">8</span></li>
+        <li><span>1.3 Idempotency</span><span class="dots"></span><span class="spg">9</span></li>
+        <li><span>1.4 Lambda Powertools</span><span class="dots"></span><span class="spg">9</span></li>
+      </ul>
+    </div>
+    <div class="toc-chapter">
+      <div class="toc-ch-row"><span class="tnum">02</span><a class="tname" data-target="ch-2">AWS Step Functions</a><span class="tpg">11</span></div>
+      <ul class="toc-sub">
+        <li><span>2.1 Standard vs Express Workflows</span><span class="dots"></span><span class="spg">11</span></li>
+        <li><span>2.2 State Types</span><span class="dots"></span><span class="spg">11</span></li>
+        <li><span>2.3 Error Handling and Retries</span><span class="dots"></span><span class="spg">12</span></li>
+        <li><span>2.4 Orchestration Patterns</span><span class="dots"></span><span class="spg">12</span></li>
+      </ul>
+    </div>
+    <div class="toc-chapter">
+      <div class="toc-ch-row"><span class="tnum">03</span><a class="tname" data-target="ch-3">Advanced DynamoDB</a><span class="tpg">14</span></div>
+      <ul class="toc-sub">
+        <li><span>3.1 The Single-Table Design Philosophy</span><span class="dots"></span><span class="spg">14</span></li>
+        <li><span>3.2 A Worked Example</span><span class="dots"></span><span class="spg">14</span></li>
+        <li><span>3.3 Index Overloading and Sparse Indexes</span><span class="dots"></span><span class="spg">15</span></li>
+        <li><span>3.4 Write Sharding for Hot Partitions</span><span class="dots"></span><span class="spg">15</span></li>
+      </ul>
+    </div>
+    <div class="toc-chapter">
+      <div class="toc-ch-row"><span class="tnum">04</span><a class="tname" data-target="ch-4">Advanced API Gateway</a><span class="tpg">17</span></div>
+      <ul class="toc-sub">
+        <li><span>4.1 Mapping Templates and VTL</span><span class="dots"></span><span class="spg">17</span></li>
+        <li><span>4.2 Direct AWS Service Integration</span><span class="dots"></span><span class="spg">17</span></li>
+        <li><span>4.3 Custom Domains and mTLS</span><span class="dots"></span><span class="spg">18</span></li>
+      </ul>
+    </div>
+    <div class="toc-chapter">
+      <div class="toc-ch-row"><span class="tnum">05</span><a class="tname" data-target="ch-5">Event-Driven Architecture at Scale</a><span class="tpg">19</span></div>
+      <ul class="toc-sub">
+        <li><span>5.1 EventBridge Deep Dive</span><span class="dots"></span><span class="spg">19</span></li>
+        <li><span>5.2 EventBridge Pipes</span><span class="dots"></span><span class="spg">19</span></li>
+        <li><span>5.3 Choreography vs Orchestration</span><span class="dots"></span><span class="spg">20</span></li>
+        <li><span>5.4 Schema Evolution</span><span class="dots"></span><span class="spg">20</span></li>
+      </ul>
+    </div>
+    <div class="toc-chapter">
+      <div class="toc-ch-row"><span class="tnum">06</span><a class="tname" data-target="ch-6">Advanced CloudFormation</a><span class="tpg">21</span></div>
+      <ul class="toc-sub">
+        <li><span>6.1 Nested Stacks vs Cross-Stack References</span><span class="dots"></span><span class="spg">21</span></li>
+        <li><span>6.2 Custom Resources</span><span class="dots"></span><span class="spg">21</span></li>
+        <li><span>6.3 Deployment Safety</span><span class="dots"></span><span class="spg">22</span></li>
+      </ul>
+    </div>
+    <div class="toc-chapter">
+      <div class="toc-ch-row"><span class="tnum">07</span><a class="tname" data-target="ch-7">Advanced Security</a><span class="tpg">23</span></div>
+      <ul class="toc-sub">
+        <li><span>7.1 ABAC — Attribute-Based Access Control</span><span class="dots"></span><span class="spg">23</span></li>
+        <li><span>7.2 Identity Federation</span><span class="dots"></span><span class="spg">23</span></li>
+        <li><span>7.3 Resource Policies and Cross-Account Access</span><span class="dots"></span><span class="spg">24</span></li>
+        <li><span>7.4 Secrets Rotation</span><span class="dots"></span><span class="spg">24</span></li>
+      </ul>
+    </div>
+    <div class="toc-chapter">
+      <div class="toc-ch-row"><span class="tnum">08</span><a class="tname" data-target="ch-8">Performance Optimization</a><span class="tpg">26</span></div>
+      <ul class="toc-sub">
+        <li><span>8.1 Caching Layers</span><span class="dots"></span><span class="spg">26</span></li>
+        <li><span>8.2 Lambda Performance Tuning</span><span class="dots"></span><span class="spg">26</span></li>
+        <li><span>8.3 Connection Management</span><span class="dots"></span><span class="spg">27</span></li>
+        <li><span>8.4 DynamoDB Performance</span><span class="dots"></span><span class="spg">27</span></li>
+      </ul>
+    </div>
+    <div class="toc-chapter">
+      <div class="toc-ch-row"><span class="tnum">09</span><a class="tname" data-target="ch-9">Cost Optimization at the Architecture Level</a><span class="tpg">28</span></div>
+      <ul class="toc-sub">
+        <li><span>9.1 Serverless vs Provisioned Cost Shape</span><span class="dots"></span><span class="spg">28</span></li>
+        <li><span>9.2 Data Transfer Costs</span><span class="dots"></span><span class="spg">28</span></li>
+        <li><span>9.3 Storage and Compute Cost Levers</span><span class="dots"></span><span class="spg">29</span></li>
+      </ul>
+    </div>
+    <div class="toc-chapter">
+      <div class="toc-ch-row"><span class="tnum">10</span><a class="tname" data-target="ch-10">Observability and Troubleshooting</a><span class="tpg">30</span></div>
+      <ul class="toc-sub">
+        <li><span>10.1 X-Ray Deep Dive</span><span class="dots"></span><span class="spg">30</span></li>
+        <li><span>10.2 Structured Logging</span><span class="dots"></span><span class="spg">30</span></li>
+        <li><span>10.3 Troubleshooting Patterns</span><span class="dots"></span><span class="spg">31</span></li>
+        <li><span>10.4 CloudWatch for Troubleshooting</span><span class="dots"></span><span class="spg">31</span></li>
+      </ul>
+    </div>
+    <div class="toc-chapter">
+      <div class="toc-ch-row"><span class="tnum">11</span><a class="tname" data-target="ch-11">Resilience and Error Handling</a><span class="tpg">32</span></div>
+      <ul class="toc-sub">
+        <li><span>11.1 Retries and Backoff</span><span class="dots"></span><span class="spg">32</span></li>
+        <li><span>11.2 Dead Letter Queues and Failure Destinations</span><span class="dots"></span><span class="spg">32</span></li>
+        <li><span>11.3 Circuit Breaker Pattern</span><span class="dots"></span><span class="spg">32</span></li>
+        <li><span>11.4 Decoupling for Resilience</span><span class="dots"></span><span class="spg">33</span></li>
+      </ul>
+    </div>
+    <div class="toc-chapter">
+      <div class="toc-ch-row"><span class="tnum">12</span><a class="tname" data-target="ch-12">Exam Mastery and Mock Simulation</a><span class="tpg">34</span></div>
+      <ul class="toc-sub">
+        <li><span>12.1 DVA-C02 Exam Recap</span><span class="dots"></span><span class="spg">34</span></li>
+        <li><span>12.2 How to Read Advanced Scenario Questions</span><span class="dots"></span><span class="spg">34</span></li>
+        <li><span>12.3 Advanced Scenario Pattern Bank</span><span class="dots"></span><span class="spg">34</span></li>
+        <li><span>12.4 Final Week Plan</span><span class="dots"></span><span class="spg">35</span></li>
+      </ul>
+    </div>
+
+    <hr class="toc-divider" />
+    <div class="toc-meta-row">Appendix A — DVA-C02 Advanced Cheat Sheet <span style="float:right;color:#9aa5b1;font-family:var(--mono);font-size:15px;">37</span></div>
+    <ul class="toc-sub" style="padding-left:0;">
+      <li><span>Orchestration and Events</span><span class="dots"></span><span class="spg">37</span></li>
+      <li><span>DynamoDB Advanced</span><span class="dots"></span><span class="spg">37</span></li>
+      <li><span>Security Advanced</span><span class="dots"></span><span class="spg">37</span></li>
+      <li><span>Performance and Cost</span><span class="dots"></span><span class="spg">38</span></li>
+      <li><span>Resilience</span><span class="dots"></span><span class="spg">38</span></li>
+    </ul>
+    <div class="toc-meta-row">Appendix B — Glossary <span style="float:right;color:#9aa5b1;font-family:var(--mono);font-size:15px;">39</span></div>
+    <div class="toc-meta-row">Appendix C — Question Bank <span style="float:right;color:#9aa5b1;font-family:var(--mono);font-size:15px;">41</span></div>
+    <ul class="toc-sub" style="padding-left:0;">
+      <li><span>Part 1 — Multiple Choice Questions (18 Questions)</span><span class="dots"></span><span class="spg">42</span></li>
+      <li><span>Part 2 — Multiple Response Questions (5 Questions)</span><span class="dots"></span><span class="spg">49</span></li>
+      <li><span>Part 3 — Short Answer / Fill in the Blank (10 Questions)</span><span class="dots"></span><span class="spg">51</span></li>
+      <li><span>Part 4 — Scenario-Based Questions (4 Questions)</span><span class="dots"></span><span class="spg">54</span></li>
+    </ul>
+  </div>
+  <div class="pg-footer">AWS Mastery Series &nbsp;|&nbsp; Book 3: DVA-C02 &nbsp;|&nbsp; Author: Faizan H.</div>
+</section>
+
+<!-- ===== CHAPTER 01 ===== -->
+<section class="page page-interior" id="ch-1">
+  <div class="inner">
+    <p class="chap-num">Chapter 01</p>
+    <h1 class="page-title">Advanced Lambda Patterns</h1>
+    <p class="byline">Event-driven design, orchestration, and concurrency at scale</p>
+    <div class="title-rule"></div>
+    <p>Book 2 covered Lambda fundamentals — concurrency, layers, versions, destinations. This chapter is about composing Lambda functions into real architectures: how to fan out work, coordinate multi-step processes, handle partial failures, and avoid the subtle traps that only appear at scale.</p>
+
+    <h2 class="sec">1.1 Synchronous vs Asynchronous vs Stream Composition</h2>
+    <p>At an architectural level, how Lambda is invoked determines how you design for failure, retries, and ordering. The three models are not interchangeable:</p>
+    <div class="tbl-wrap">
+      <table class="book">
+        <thead><tr><th>Model</th><th>Retry Behaviour</th><th>Ordering</th><th>Best For</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Synchronous</strong></td><td>Caller handles retry</td><td>Caller-controlled</td><td>APIs, request/response</td></tr>
+          <tr><td><strong>Asynchronous</strong></td><td>2 automatic retries, then DLQ/destination</td><td>No ordering</td><td>Event reactions, S3/SNS triggers</td></tr>
+          <tr><td><strong>Event source mapping (poll)</strong></td><td>Batch retried; stream blocks on failure</td><td>Ordered per shard/group</td><td>Kinesis, DynamoDB Streams, SQS</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout exam">
+      <div class="c-label"><span class="c-icon">!</span><span class="c-tag">Exam Trap</span> · Stream Poisoning by a Bad Record</div>
+      <p>With Kinesis or DynamoDB Streams event source mappings, Lambda processes records in order per shard. If one record fails and you do not handle it, Lambda retries the entire batch and the shard is <strong>BLOCKED</strong> — nothing after that record processes until it succeeds or expires. Fix: enable "Bisect batch on function error" and configure a failure destination (on-failure SQS/SNS) so poison records are isolated instead of halting the stream.</p>
+    </div>
+
+    <h2 class="sec">1.2 Fan-Out and Fan-In</h2>
+    <p>Fan-out distributes one event to many parallel workers. Fan-in aggregates many results back into one. These are the building blocks of parallel processing on AWS.</p>
+    <ul class="book-list">
+      <li><strong>Fan-out:</strong> SNS → multiple SQS queues → multiple Lambda consumers, OR EventBridge → multiple targets</li>
+      <li><strong>Fan-in:</strong> Workers write partial results to DynamoDB or S3; a final Lambda aggregates once all parts complete</li>
+      <li><strong>Coordination challenge:</strong> knowing when all parallel work is done — this is where Step Functions Map state (Chapter 2) shines</li>
+    </ul>
+    <div class="callout backend">
+      <div class="c-label"><span class="c-icon">&lt;/&gt;</span><span class="c-tag">Backend Dev Angle</span><span class="lang-chip">Node.js</span></div>
+      <p>A common fan-in pattern in Node.js: each worker increments an atomic counter in DynamoDB and writes its result. The worker that brings the counter to the expected total triggers the aggregation step:</p>
+      <div class="code"><span class="key">const</span> res = <span class="key">await</span> ddb.send(<span class="key">new</span> UpdateItemCommand({
+  TableName: <span class="str">"jobs"</span>, Key: { jobId: { S: jobId } },
+  UpdateExpression: <span class="str">"SET completed = completed + :one"</span>,
+  ExpressionAttributeValues: { <span class="str">":one"</span>: { N: <span class="str">"1"</span> } },
+  ReturnValues: <span class="str">"UPDATED_NEW"</span>
+}));
+<span class="key">if</span> (Number(res.Attributes.completed.N) === expectedTotal) { <span class="key">await</span> triggerAggregation(jobId); }</div>
+    </div>
+
+    <h2 class="sec">1.3 Idempotency</h2>
+    <p>In event-driven systems, at-least-once delivery is the norm — the same event can arrive twice. Your Lambda must be idempotent: processing the same event twice produces the same result as processing it once.</p>
+    <ul class="book-list">
+      <li>Use an idempotency key (e.g., a unique event ID or order ID)</li>
+      <li>Store processed keys in DynamoDB with a conditional write (<code>attribute_not_exists</code>)</li>
+      <li>If the key already exists, skip processing — the event is a duplicate</li>
+      <li>AWS provides the Lambda Powertools idempotency utility to handle this automatically</li>
+    </ul>
+    <div class="callout exam">
+      <div class="c-label"><span class="c-icon">!</span><span class="c-tag">Exam Trap</span> · SQS Standard + Lambda = Possible Duplicates</div>
+      <p>SQS Standard queues guarantee at-least-once delivery, not exactly-once. Combined with Lambda retries, your function <strong>WILL</strong> occasionally see duplicate messages. If processing is not idempotent (e.g., "charge the customer"), you will double-charge. The exam tests this: "payments processed twice" in an SQS Standard + Lambda design = missing idempotency, OR switch to SQS FIFO with content-based deduplication.</p>
+    </div>
+
+    <h2 class="sec">1.4 Lambda Powertools</h2>
+    <p>AWS Lambda Powertools is a developer library (available for Node.js/TypeScript) that provides production-grade implementations of cross-cutting concerns:</p>
+    <div class="tbl-wrap">
+      <table class="book">
+        <thead><tr><th style="width:34%">Utility</th><th>What It Provides</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Logger</strong></td><td>Structured JSON logging with context injection</td></tr>
+          <tr><td><strong>Tracer</strong></td><td>X-Ray tracing with automatic segment capture</td></tr>
+          <tr><td><strong>Metrics</strong></td><td>Custom CloudWatch metrics via Embedded Metric Format (EMF)</td></tr>
+          <tr><td><strong>Idempotency</strong></td><td>Automatic idempotency using DynamoDB as the store</td></tr>
+          <tr><td><strong>Parameters</strong></td><td>Cached retrieval from SSM Parameter Store / Secrets Manager</td></tr>
+          <tr><td><strong>Batch Processing</strong></td><td>Partial batch failure handling for SQS/Kinesis/DynamoDB</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="checklist">
+      <div class="cl-title">✓ Progress Checklist · Chapter 1</div>
+      <ul>
+        <li>I understand how invocation model affects retry, ordering, and failure design</li>
+        <li>I know how a poison record can block a stream and how to isolate it</li>
+        <li>I can design fan-out and fan-in patterns</li>
+        <li>I understand idempotency and how to implement it with DynamoDB conditional writes</li>
+        <li>I know what Lambda Powertools provides</li>
+      </ul>
+    </div>
+  </div>
+  <div class="pg-footer">AWS Mastery Series &nbsp;|&nbsp; Book 3: DVA-C02 &nbsp;|&nbsp; Author: Faizan H.</div>
+</section>
+
+<!-- ===== CHAPTER 02 ===== -->
+<section class="page page-interior" id="ch-2">
+  <div class="inner">
+    <p class="chap-num">Chapter 02</p>
+    <h1 class="page-title">AWS Step Functions</h1>
+    <p class="byline">Orchestrating workflows with state machines</p>
+    <div class="title-rule"></div>
+    <p>When a process has multiple steps, branching logic, parallel paths, retries, and human approvals, chaining Lambda functions manually becomes fragile. Step Functions is AWS's serverless orchestration service — you define a workflow as a state machine, and AWS manages execution, state, retries, and error handling.</p>
+
+    <h2 class="sec">2.1 Standard vs Express Workflows</h2>
+    <div class="tbl-wrap">
+      <table class="book">
+        <thead><tr><th style="width:24%">Feature</th><th>Standard</th><th>Express</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Max duration</strong></td><td>1 year</td><td>5 minutes</td></tr>
+          <tr><td><strong>Execution model</strong></td><td>Exactly-once</td><td>At-least-once (async) / at-most-once (sync)</td></tr>
+          <tr><td><strong>Pricing</strong></td><td>Per state transition</td><td>Per execution + duration + memory</td></tr>
+          <tr><td><strong>Execution history</strong></td><td>Full, visible in console</td><td>Sent to CloudWatch Logs</td></tr>
+          <tr><td><strong>Best for</strong></td><td>Long-running, auditable workflows</td><td>High-volume, short event processing</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout exam">
+      <div class="c-label"><span class="c-icon">!</span><span class="c-tag">Exam Trap</span> · Standard vs Express by Volume and Duration</div>
+      <p>"High-volume event processing, thousands per second, each under a few seconds" = Express (cheaper at volume). "Order fulfillment workflow that may take days and needs an auditable history of every step" = Standard (exactly-once, full history, up to 1 year). Pricing models differ fundamentally: Standard charges per state transition, Express per execution time.</p>
+    </div>
+
+    <h2 class="sec">2.2 State Types</h2>
+    <div class="tbl-wrap">
+      <table class="book">
+        <thead><tr><th style="width:28%">State</th><th>Purpose</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Task</strong></td><td>Do work — invoke a Lambda, ECS task, or another AWS service</td></tr>
+          <tr><td><strong>Choice</strong></td><td>Branching logic based on input</td></tr>
+          <tr><td><strong>Parallel</strong></td><td>Run multiple branches concurrently</td></tr>
+          <tr><td><strong>Map</strong></td><td>Run the same steps for each item in an array (dynamic parallelism)</td></tr>
+          <tr><td><strong>Wait</strong></td><td>Pause for a duration or until a timestamp</td></tr>
+          <tr><td><strong>Succeed / Fail</strong></td><td>Terminate the execution with success or failure</td></tr>
+          <tr><td><strong>Pass</strong></td><td>Pass input to output, optionally transforming it</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 class="sec">2.3 Error Handling and Retries</h2>
+    <p>Step Functions has built-in error handling that you would otherwise write by hand in Lambda. Each Task state supports:</p>
+    <ul class="book-list">
+      <li><strong>Retry</strong> — retry the state on specific errors, with configurable interval, backoff rate, and max attempts</li>
+      <li><strong>Catch</strong> — route to a fallback state when an error occurs (like a try/catch)</li>
+      <li><strong>Timeout</strong> — fail the state if it runs too long</li>
+    </ul>
+    <div class="callout backend">
+      <div class="c-label"><span class="c-icon">&lt;/&gt;</span><span class="c-tag">Backend Dev Angle</span><span class="lang-chip">Node.js</span></div>
+      <p>A Task state retrying a Lambda on transient errors with exponential backoff:</p>
+      <div class="code"><span class="str">"ProcessPayment"</span>: {
+  <span class="str">"Type"</span>: <span class="str">"Task"</span>,
+  <span class="str">"Resource"</span>: <span class="str">"arn:aws:lambda:...:processPayment"</span>,
+  <span class="str">"Retry"</span>: [{ <span class="str">"ErrorEquals"</span>: [<span class="str">"States.TaskFailed"</span>],
+    <span class="str">"IntervalSeconds"</span>: <span class="num">2</span>, <span class="str">"MaxAttempts"</span>: <span class="num">3</span>, <span class="str">"BackoffRate"</span>: <span class="num">2.0</span> }],
+  <span class="str">"Catch"</span>: [{ <span class="str">"ErrorEquals"</span>: [<span class="str">"States.ALL"</span>], <span class="str">"Next"</span>: <span class="str">"RefundAndNotify"</span> }]
+}</div>
+    </div>
+
+    <h2 class="sec">2.4 Orchestration Patterns</h2>
+    <ul class="book-list">
+      <li><strong>Saga pattern:</strong> a sequence of transactions where each has a compensating action. If step 3 fails, run compensations for steps 1 and 2 (e.g., refund payment, release inventory). Step Functions Catch states implement this cleanly.</li>
+      <li><strong>Callback pattern (.waitForTaskToken):</strong> pause the workflow until an external system (or human) calls back with a task token. Used for human approval or async third-party processing.</li>
+      <li><strong>Map state for dynamic parallelism:</strong> process an array of items in parallel without knowing the count in advance.</li>
+    </ul>
+    <div class="callout exam">
+      <div class="c-label"><span class="c-icon">!</span><span class="c-tag">Exam Trap</span> · Step Functions vs SQS vs EventBridge</div>
+      <p>"Coordinate a multi-step workflow with branching, retries, and rollback" = Step Functions. "Decouple two services with a buffer" = SQS. "Route events by rules to multiple targets" = EventBridge. Step Functions is for <strong>ORCHESTRATION</strong> (one brain coordinating steps). The others are for <strong>CHOREOGRAPHY</strong> (services reacting independently).</p>
+    </div>
+
+    <div class="checklist">
+      <div class="cl-title">✓ Progress Checklist · Chapter 2</div>
+      <ul>
+        <li>I know Standard vs Express workflows and when to use each</li>
+        <li>I know the 7 Step Functions state types</li>
+        <li>I understand Retry, Catch, and Timeout on Task states</li>
+        <li>I understand the saga and callback patterns</li>
+        <li>I can distinguish orchestration (Step Functions) from choreography (SQS/EventBridge)</li>
+      </ul>
+    </div>
+  </div>
+  <div class="pg-footer">AWS Mastery Series &nbsp;|&nbsp; Book 3: DVA-C02 &nbsp;|&nbsp; Author: Faizan H.</div>
+</section>
+
+<!-- ===== CHAPTER 03 ===== -->
+<section class="page page-interior" id="ch-3">
+  <div class="inner">
+    <p class="chap-num">Chapter 03</p>
+    <h1 class="page-title">Advanced DynamoDB</h1>
+    <p class="byline">Single-table design and access-pattern modeling</p>
+    <div class="title-rule"></div>
+    <p>Book 2 covered DynamoDB mechanics — keys, indexes, streams, DAX. This chapter covers the hardest and most misunderstood topic: how to actually model data in DynamoDB. The relational instincts you bring from Postgres will work against you here.</p>
+
+    <h2 class="sec">3.1 The Single-Table Design Philosophy</h2>
+    <p>In relational databases you normalize: one table per entity, joins at query time. In DynamoDB there are no joins, and queries must be fast at any scale. The advanced pattern is the opposite of relational thinking: store multiple entity types in a single table, structured so that the items you fetch together live together.</p>
+    <ul class="book-list">
+      <li><strong>Design starts from access patterns, not entities.</strong> List every query your app will make FIRST.</li>
+      <li>Use generic key names: <code>PK</code> (partition key) and <code>SK</code> (sort key), not userId/orderId</li>
+      <li>Different entity types share the same table, distinguished by key prefixes</li>
+      <li>Related items share a partition key so a single query returns them together</li>
+    </ul>
+    <div class="callout note">
+      <div class="c-label"><span class="c-icon">i</span><span class="c-tag">Note</span> · Access Patterns Come First</div>
+      <p>You cannot add an efficient query to DynamoDB later the way you add an index in Postgres. If you did not design for an access pattern, your only options are a Scan (slow, expensive) or a new GSI. This is why DynamoDB modeling starts by exhaustively listing access patterns before a single key is chosen.</p>
+    </div>
+
+    <h2 class="sec">3.2 A Worked Example</h2>
+    <p>Consider an e-commerce app. Access patterns: get a user, get a user's orders, get an order's items. In a single table:</p>
+    <div class="tbl-wrap">
+      <table class="book">
+        <thead><tr><th>PK</th><th>SK</th><th>Entity</th><th>Other Attributes</th></tr></thead>
+        <tbody>
+          <tr><td><code>USER#123</code></td><td><code>PROFILE</code></td><td>User</td><td>name, email</td></tr>
+          <tr><td><code>USER#123</code></td><td><code>ORDER#1001</code></td><td>Order</td><td>total, status, date</td></tr>
+          <tr><td><code>USER#123</code></td><td><code>ORDER#1002</code></td><td>Order</td><td>total, status, date</td></tr>
+          <tr><td><code>ORDER#1001</code></td><td><code>ITEM#5</code></td><td>Order Item</td><td>product, qty, price</td></tr>
+          <tr><td><code>ORDER#1001</code></td><td><code>ITEM#6</code></td><td>Order Item</td><td>product, qty, price</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Query <code>PK=USER#123</code> returns the profile and all orders in one call. Query <code>PK=ORDER#1001</code> returns all items in that order. No joins, single-digit millisecond responses.</p>
+
+    <h2 class="sec">3.3 Index Overloading and Sparse Indexes</h2>
+    <ul class="book-list">
+      <li><strong>Index overloading:</strong> a single GSI serves multiple access patterns by storing different entity types with different meanings in the same GSI keys</li>
+      <li><strong>Sparse index:</strong> a GSI only contains items that have the GSI key attribute. Items missing that attribute are not indexed — useful for querying a subset (e.g., only "active" records)</li>
+      <li><strong>Inverted index:</strong> a GSI that swaps PK and SK, enabling the reverse lookup (find all orders containing a product)</li>
+    </ul>
+    <div class="callout exam">
+      <div class="c-label"><span class="c-icon">!</span><span class="c-tag">Exam Trap</span> · Sparse Index for Filtered Queries</div>
+      <p>If you only want to query items in a particular state (e.g., orders with status=OPEN), add the GSI partition key attribute ONLY to those items. The GSI becomes a sparse index containing only open orders — querying it is far cheaper than scanning all orders and filtering. The exam frames this as "efficiently query only the small subset of items that match a condition."</p>
+    </div>
+
+    <h2 class="sec">3.4 Write Sharding for Hot Partitions</h2>
+    <p>A hot partition occurs when too many reads/writes hit one partition key, exceeding its throughput. Solution: write sharding — append a calculated suffix (e.g., a number 1-10) to the partition key to spread writes across multiple partitions, then query all shards in parallel on read.</p>
+
+    <div class="checklist">
+      <div class="cl-title">✓ Progress Checklist · Chapter 3</div>
+      <ul>
+        <li>I understand single-table design and why it differs from relational modeling</li>
+        <li>I know to list access patterns before designing keys</li>
+        <li>I can model multiple entity types in one table with shared partition keys</li>
+        <li>I understand index overloading, sparse indexes, and inverted indexes</li>
+        <li>I know what a hot partition is and how write sharding solves it</li>
+      </ul>
+    </div>
+  </div>
+  <div class="pg-footer">AWS Mastery Series &nbsp;|&nbsp; Book 3: DVA-C02 &nbsp;|&nbsp; Author: Faizan H.</div>
+</section>
+
+<!-- ===== CHAPTER 04 ===== -->
+<section class="page page-interior" id="ch-4">
+  <div class="inner">
+    <p class="chap-num">Chapter 04</p>
+    <h1 class="page-title">Advanced API Gateway</h1>
+    <p class="byline">Mapping templates, transformation, and custom domains</p>
+    <div class="title-rule"></div>
+    <p>Book 2 covered API types, integrations, authorizers, and caching. This chapter covers the advanced REST API features: transforming requests and responses with VTL, custom domains, mutual TLS, and the integration patterns that avoid Lambda entirely.</p>
+
+    <h2 class="sec">4.1 Mapping Templates and VTL</h2>
+    <p>In a non-proxy (custom) integration, API Gateway can transform the request before it reaches the backend and transform the response before returning it to the client — using Velocity Template Language (VTL) mapping templates.</p>
+    <ul class="book-list">
+      <li>Reshape a client JSON body into the format a legacy backend expects</li>
+      <li>Inject context (user ID from the authorizer, request time) into the backend request</li>
+      <li>Filter or rename fields in the response before returning to the client</li>
+      <li>Convert query parameters into a request body</li>
+    </ul>
+    <div class="callout note">
+      <div class="c-label"><span class="c-icon">i</span><span class="c-tag">Note</span> · Proxy vs Non-Proxy Trade-off</div>
+      <p>Lambda Proxy integration is simpler — the full request goes to Lambda and Lambda builds the full response. Non-proxy with VTL templates moves transformation INTO API Gateway, keeping Lambda focused on business logic. The cost: VTL is its own language, harder to test and debug. For most apps, proxy is preferred. Use VTL when integrating directly with AWS services without Lambda.</p>
+    </div>
+
+    <h2 class="sec">4.2 Direct AWS Service Integration</h2>
+    <p>API Gateway can call AWS services directly — no Lambda needed. This removes the cost and cold-start of a Lambda for simple pass-through operations:</p>
+    <ul class="book-list">
+      <li><strong>API Gateway → SQS:</strong> accept a request and drop it on a queue directly</li>
+      <li><strong>API Gateway → DynamoDB:</strong> simple GetItem/PutItem without Lambda</li>
+      <li><strong>API Gateway → Step Functions:</strong> start a workflow execution from an HTTP call</li>
+      <li><strong>API Gateway → Kinesis:</strong> ingest records into a stream</li>
+    </ul>
+    <div class="callout exam">
+      <div class="c-label"><span class="c-icon">!</span><span class="c-tag">Exam Trap</span> · Remove Lambda for Simple Pass-Through</div>
+      <p>If a question describes an API endpoint that simply forwards a request to SQS or writes a single item to DynamoDB — with no business logic — the cost-optimal answer is direct AWS service integration, not API Gateway → Lambda → service. You eliminate Lambda invocation cost and cold starts entirely.</p>
+    </div>
+
+    <h2 class="sec">4.3 Custom Domains and mTLS</h2>
+    <ul class="book-list">
+      <li><strong>Custom domain names:</strong> map api.yourcompany.com to your API Gateway, with an ACM certificate (regional, or us-east-1 for edge-optimized)</li>
+      <li><strong>Base path mapping:</strong> route api.company.com/orders and api.company.com/users to different APIs under one domain</li>
+      <li><strong>Mutual TLS (mTLS):</strong> require clients to present a certificate — used for B2B APIs and partner integrations where client identity must be cryptographically verified</li>
+    </ul>
+
+    <div class="checklist">
+      <div class="cl-title">✓ Progress Checklist · Chapter 4</div>
+      <ul>
+        <li>I understand VTL mapping templates and when to use non-proxy integration</li>
+        <li>I know API Gateway can integrate directly with SQS, DynamoDB, Step Functions, Kinesis</li>
+        <li>I know when removing Lambda for direct integration is cost-optimal</li>
+        <li>I understand custom domains, base path mapping, and mTLS</li>
+      </ul>
+    </div>
+  </div>
+  <div class="pg-footer">AWS Mastery Series &nbsp;|&nbsp; Book 3: DVA-C02 &nbsp;|&nbsp; Author: Faizan H.</div>
+</section>
+
+<!-- ===== CHAPTER 05 ===== -->
+<section class="page page-interior" id="ch-5">
+  <div class="inner">
+    <p class="chap-num">Chapter 05</p>
+    <h1 class="page-title">Event-Driven Architecture at Scale</h1>
+    <p class="byline">EventBridge deep dive, choreography, and schema management</p>
+    <div class="title-rule"></div>
+    <p>Event-driven architecture decouples producers from consumers — services emit events without knowing who consumes them. At scale, this requires careful thinking about routing, schema evolution, and the trade-off between choreography and orchestration.</p>
+
+    <h2 class="sec">5.1 EventBridge Deep Dive</h2>
+    <div class="tbl-wrap">
+      <table class="book">
+        <thead><tr><th style="width:30%">Feature</th><th>Detail</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Event Bus</strong></td><td>Default bus (AWS events), custom buses (your apps), partner buses (SaaS)</td></tr>
+          <tr><td><strong>Rules</strong></td><td>Match events by JSON pattern on any field; route to up to 5 targets each</td></tr>
+          <tr><td><strong>Input Transformation</strong></td><td>Reshape the event before delivery to a target</td></tr>
+          <tr><td><strong>Archive &amp; Replay</strong></td><td>Store events and replay them later — for recovery or testing</td></tr>
+          <tr><td><strong>Schema Registry</strong></td><td>Discover, store, and version event schemas; generate code bindings</td></tr>
+          <tr><td><strong>Dead Letter Queue</strong></td><td>Failed event deliveries routed to SQS for inspection</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 class="sec">5.2 EventBridge Pipes</h2>
+    <p>EventBridge Pipes connects a source directly to a target with optional filtering and enrichment — a point-to-point integration without writing glue Lambda code. Source → (filter) → (enrich) → target.</p>
+    <ul class="book-list">
+      <li><strong>Sources:</strong> SQS, Kinesis, DynamoDB Streams, Amazon MQ, Kafka</li>
+      <li><strong>Enrichment:</strong> Lambda, Step Functions, API Gateway, API destinations</li>
+      <li><strong>Targets:</strong> 15+ AWS services</li>
+      <li>Replaces the common "SQS → Lambda → transform → send somewhere" boilerplate</li>
+    </ul>
+    <div class="callout exam">
+      <div class="c-label"><span class="c-icon">!</span><span class="c-tag">Exam Trap</span> · Pipes vs Bus</div>
+      <p>EventBridge Bus = one-to-many routing (fan-out to multiple targets by rules). EventBridge Pipes = point-to-point (one source to one target, with filter/enrich). "Connect a DynamoDB Stream to a Step Function with filtering, no custom code" = Pipes. "Route events to many subscribers by rules" = Bus.</p>
+    </div>
+
+    <h2 class="sec">5.3 Choreography vs Orchestration</h2>
+    <div class="tbl-wrap">
+      <table class="book">
+        <thead><tr><th style="width:20%">Aspect</th><th>Choreography</th><th>Orchestration</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Control</strong></td><td>Distributed — services react to events</td><td>Central — one coordinator (Step Functions)</td></tr>
+          <tr><td><strong>Coupling</strong></td><td>Loose</td><td>Tighter (coordinator knows the steps)</td></tr>
+          <tr><td><strong>Visibility</strong></td><td>Harder to trace the full flow</td><td>Full execution history</td></tr>
+          <tr><td><strong>Best for</strong></td><td>Independent reactions, scale</td><td>Multi-step processes needing rollback</td></tr>
+          <tr><td><strong>AWS service</strong></td><td>EventBridge, SNS</td><td>Step Functions</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 class="sec">5.4 Schema Evolution</h2>
+    <p>As systems evolve, event formats change. The rule: never break existing consumers. Add new optional fields rather than renaming or removing existing ones. Version event schemas (e.g., detail-type "OrderPlaced.v2") when a breaking change is unavoidable, and let consumers migrate at their own pace.</p>
+
+    <div class="checklist">
+      <div class="cl-title">✓ Progress Checklist · Chapter 5</div>
+      <ul>
+        <li>I know EventBridge features: buses, rules, input transformation, archive/replay, schema registry</li>
+        <li>I understand EventBridge Pipes and how it differs from a Bus</li>
+        <li>I can distinguish choreography from orchestration and choose between them</li>
+        <li>I understand backward-compatible schema evolution</li>
+      </ul>
+    </div>
+  </div>
+  <div class="pg-footer">AWS Mastery Series &nbsp;|&nbsp; Book 3: DVA-C02 &nbsp;|&nbsp; Author: Faizan H.</div>
+</section>
+
+<!-- ===== CHAPTER 06 ===== -->
+<section class="page page-interior" id="ch-6">
+  <div class="inner">
+    <p class="chap-num">Chapter 06</p>
+    <h1 class="page-title">Advanced CloudFormation</h1>
+    <p class="byline">Nested stacks, cross-stack references, and custom resources</p>
+    <div class="title-rule"></div>
+    <p>Book 2 covered CloudFormation and SAM basics. At scale, a single template becomes unmanageable. This chapter covers structuring large infrastructure: nested stacks, cross-stack references, custom resources, and deployment safety.</p>
+
+    <h2 class="sec">6.1 Nested Stacks vs Cross-Stack References</h2>
+    <div class="tbl-wrap">
+      <table class="book">
+        <thead><tr><th style="width:22%">Approach</th><th>How It Works</th><th>Best For</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Nested Stacks</strong></td><td>A parent stack creates child stacks via <code>AWS::CloudFormation::Stack</code></td><td>Reusable components owned by one team, deployed together</td></tr>
+          <tr><td><strong>Cross-Stack References</strong></td><td>Stack A exports a value; Stack B imports it via <code>Fn::ImportValue</code></td><td>Independently deployed stacks sharing resources (e.g., shared VPC)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout exam">
+      <div class="c-label"><span class="c-icon">!</span><span class="c-tag">Exam Trap</span> · You Cannot Delete an Exported Value in Use</div>
+      <p>If Stack A exports a value and Stack B imports it, you cannot delete or modify the export in Stack A while Stack B still imports it. CloudFormation blocks it to protect the dependency. This makes cross-stack references rigid — nested stacks are more flexible for tightly coupled resources. The exam tests this constraint directly.</p>
+    </div>
+
+    <h2 class="sec">6.2 Custom Resources</h2>
+    <p>When CloudFormation does not natively support a resource or action, a Custom Resource lets you run a Lambda function during stack create/update/delete. CloudFormation calls your Lambda with the event type and waits for a success/failure signal.</p>
+    <ul class="book-list">
+      <li>Provision third-party resources (e.g., a Datadog monitor, a Cloudflare record)</li>
+      <li>Run setup logic (seed a database, populate config)</li>
+      <li>Look up values not available as CloudFormation parameters</li>
+      <li>Your Lambda MUST send a response to the pre-signed S3 URL or the stack hangs until timeout</li>
+    </ul>
+
+    <h2 class="sec">6.3 Deployment Safety</h2>
+    <ul class="book-list">
+      <li><strong>Change Sets:</strong> preview exactly what will be added, modified, or deleted before executing</li>
+      <li><strong>Stack Policies:</strong> protect specific resources from accidental updates during a stack update</li>
+      <li><strong>DeletionPolicy / UpdateReplacePolicy:</strong> Retain or Snapshot critical resources (RDS, S3) on delete or replace</li>
+      <li><strong>Drift Detection:</strong> detect manual changes made outside CloudFormation</li>
+      <li><strong>Rollback Triggers:</strong> monitor CloudWatch alarms during deployment and auto-rollback if they fire</li>
+    </ul>
+    <div class="callout tip">
+      <div class="c-label"><span class="c-icon">★</span><span class="c-tag">Tip</span> · StackSets for Multi-Account</div>
+      <p>CloudFormation StackSets deploy the same template across multiple AWS accounts and regions in one operation — essential for organizations using AWS Organizations. Common use: deploy a baseline security/IAM configuration to every account automatically.</p>
+    </div>
+
+    <div class="checklist">
+      <div class="cl-title">✓ Progress Checklist · Chapter 6</div>
+      <ul>
+        <li>I understand nested stacks vs cross-stack references and when to use each</li>
+        <li>I know you cannot delete an export that is still imported</li>
+        <li>I understand custom resources and the response-signal requirement</li>
+        <li>I know deployment safety features: change sets, stack policies, deletion policies, rollback triggers</li>
+        <li>I know what StackSets do for multi-account deployment</li>
+      </ul>
+    </div>
+  </div>
+  <div class="pg-footer">AWS Mastery Series &nbsp;|&nbsp; Book 3: DVA-C02 &nbsp;|&nbsp; Author: Faizan H.</div>
+</section>
+
+<!-- ===== CHAPTER 07 ===== -->
+<section class="page page-interior" id="ch-7">
+  <div class="inner">
+    <p class="chap-num">Chapter 07</p>
+    <h1 class="page-title">Advanced Security</h1>
+    <p class="byline">ABAC, federation, resource policies, and cross-account access</p>
+    <div class="title-rule"></div>
+    <p>Book 2 covered IAM, Cognito, KMS, Secrets Manager. This chapter goes deeper into the security patterns that appear in advanced DVA-C02 scenarios: attribute-based access control, identity federation, cross-account access, and automated secret rotation.</p>
+
+    <h2 class="sec">7.1 ABAC — Attribute-Based Access Control</h2>
+    <p>RBAC (role-based) grants permissions by role. ABAC grants permissions based on tags (attributes) attached to identities and resources. Instead of writing a policy per team, you write one policy that allows access when the principal's tag matches the resource's tag.</p>
+    <div class="callout backend">
+      <div class="c-label"><span class="c-icon">&lt;/&gt;</span><span class="c-tag">Backend Dev Angle</span><span class="lang-chip">Node.js</span></div>
+      <p>An ABAC policy allowing a user to access only resources tagged with their own department:</p>
+      <div class="code">{
+  <span class="str">"Effect"</span>: <span class="str">"Allow"</span>, <span class="str">"Action"</span>: <span class="str">"s3:*"</span>,
+  <span class="str">"Resource"</span>: <span class="str">"*"</span>,
+  <span class="str">"Condition"</span>: { <span class="str">"StringEquals"</span>: {
+    <span class="str">"aws:ResourceTag/department"</span>: <span class="str">"${aws:PrincipalTag/department}"</span>
+  } }
+}</div>
+      <p>One policy scales to any number of departments — no policy changes when teams are added.</p>
+    </div>
+    <div class="callout exam">
+      <div class="c-label"><span class="c-icon">!</span><span class="c-tag">Exam Trap</span> · ABAC Scales, RBAC Multiplies</div>
+      <p>"A fast-growing company keeps creating new IAM policies every time a team is added" — the answer is ABAC. Tag principals and resources by attribute (team, project, environment) and write one tag-matching policy. RBAC requires a new role/policy per group; ABAC does not. This is the canonical ABAC exam scenario.</p>
+    </div>
+
+    <h2 class="sec">7.2 Identity Federation</h2>
+    <div class="tbl-wrap">
+      <table class="book">
+        <thead><tr><th style="width:26%">Federation Type</th><th>Use Case</th><th>Mechanism</th></tr></thead>
+        <tbody>
+          <tr><td><strong>SAML 2.0</strong></td><td>Corporate SSO (Active Directory, Okta)</td><td>AssumeRoleWithSAML</td></tr>
+          <tr><td><strong>Web Identity (OIDC)</strong></td><td>Social login, mobile apps</td><td>AssumeRoleWithWebIdentity</td></tr>
+          <tr><td><strong>Cognito Identity Pools</strong></td><td>App users needing AWS credentials</td><td>Wraps web identity federation</td></tr>
+          <tr><td><strong>IAM Identity Center</strong></td><td>Centralized multi-account workforce access</td><td>Successor to AWS SSO</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 class="sec">7.3 Resource Policies and Cross-Account Access</h2>
+    <p>Identity-based policies attach to principals. Resource-based policies attach to resources (S3 buckets, Lambda functions, SQS queues, KMS keys) and specify who can access them — including principals in OTHER accounts.</p>
+    <ul class="book-list">
+      <li>Cross-account access needs BOTH: a resource policy granting the external principal, AND the external principal's identity policy allowing the action</li>
+      <li>S3 bucket policies, Lambda resource policies, and KMS key policies are the common cross-account surfaces</li>
+      <li>For role assumption across accounts: the trust policy (who can assume) + the permission policy (what they can do)</li>
+    </ul>
+    <div class="callout exam">
+      <div class="c-label"><span class="c-icon">!</span><span class="c-tag">Exam Trap</span> · Cross-Account Needs Both Sides</div>
+      <p>Granting cross-account access is a two-sided handshake. The resource owner adds a resource policy (or role trust policy) allowing the external account. The external account adds an identity policy allowing its user/role to make the call. Miss either side and access fails. The exam loves "Account B cannot access Account A's bucket despite the bucket policy allowing it" — the answer is Account B's IAM identity policy is missing the permission.</p>
+    </div>
+
+    <h2 class="sec">7.4 Secrets Rotation</h2>
+    <p>Secrets Manager rotates secrets using a Lambda rotation function that implements four steps: createSecret, setSecret, testSecret, finishSecret. For RDS, DynamoDB, and other supported databases, AWS provides the rotation Lambda; for custom secrets you write it.</p>
+    <div class="callout tip">
+      <div class="c-label"><span class="c-icon">★</span><span class="c-tag">Tip</span> · KMS Key Policies vs IAM</div>
+      <p>KMS is unusual: the key POLICY (resource-based) is the primary access control, not IAM. A KMS key policy must explicitly grant access — IAM permissions alone are not enough unless the key policy delegates to IAM. A common failure: "user has kms:Decrypt in IAM but still gets AccessDenied" — the key policy does not allow that principal.</p>
+    </div>
+
+    <div class="checklist">
+      <div class="cl-title">✓ Progress Checklist · Chapter 7</div>
+      <ul>
+        <li>I understand ABAC vs RBAC and when ABAC scales better</li>
+        <li>I know the federation types (SAML, OIDC/web identity, Cognito, Identity Center)</li>
+        <li>I understand resource policies and the two-sided cross-account handshake</li>
+        <li>I know how Secrets Manager rotation works (4-step Lambda)</li>
+        <li>I understand that KMS key policies are the primary KMS access control</li>
+      </ul>
+    </div>
+  </div>
+  <div class="pg-footer">AWS Mastery Series &nbsp;|&nbsp; Book 3: DVA-C02 &nbsp;|&nbsp; Author: Faizan H.</div>
+</section>
+
+<!-- ===== CHAPTER 08 ===== -->
+<section class="page page-interior" id="ch-8">
+  <div class="inner">
+    <p class="chap-num">Chapter 08</p>
+    <h1 class="page-title">Performance Optimization</h1>
+    <p class="byline">Caching, connection management, and tuning</p>
+    <div class="title-rule"></div>
+    <p>Performance on AWS is an architecture decision, not an afterthought. This chapter covers the optimization levers DVA-C02 tests: caching layers, Lambda tuning, connection pooling, and DynamoDB performance.</p>
+
+    <h2 class="sec">8.1 Caching Layers</h2>
+    <div class="tbl-wrap">
+      <table class="book">
+        <thead><tr><th style="width:18%">Layer</th><th>Service</th><th>Caches</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Edge</strong></td><td>CloudFront</td><td>Static and dynamic content at edge locations</td></tr>
+          <tr><td><strong>API</strong></td><td>API Gateway cache</td><td>API responses per stage</td></tr>
+          <tr><td><strong>Application</strong></td><td>ElastiCache (Redis/Memcached)</td><td>Database query results, sessions</td></tr>
+          <tr><td><strong>Database</strong></td><td>DynamoDB DAX</td><td>DynamoDB reads (microsecond latency)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout exam">
+      <div class="c-label"><span class="c-icon">!</span><span class="c-tag">Exam Trap</span> · Match the Cache to the Bottleneck</div>
+      <p>DAX caches DynamoDB only. ElastiCache caches anything (RDS queries, sessions, computed results). API Gateway cache caches API responses. CloudFront caches at the edge. "Reduce repeated identical DynamoDB reads with no code change" = DAX. "Cache expensive RDS query results" = ElastiCache. Picking the wrong cache for the data source is a classic wrong answer.</p>
+    </div>
+
+    <h2 class="sec">8.2 Lambda Performance Tuning</h2>
+    <ul class="book-list">
+      <li><strong>Memory = CPU:</strong> Lambda CPU scales with memory. A function may run faster AND cheaper at higher memory because it finishes sooner. Use AWS Lambda Power Tuning to find the sweet spot.</li>
+      <li><strong>Init outside the handler:</strong> initialize SDK clients and DB connections in the module scope, reused across warm invocations</li>
+      <li><strong>Provisioned Concurrency:</strong> eliminate cold starts for latency-sensitive functions</li>
+      <li><strong>SnapStart:</strong> for Java, snapshot the initialized environment to cut cold starts dramatically</li>
+      <li><strong>Keep deployment packages small:</strong> smaller package = faster cold start</li>
+    </ul>
+    <div class="callout note">
+      <div class="c-label"><span class="c-icon">i</span><span class="c-tag">Note</span> · Higher Memory Can Be Cheaper</div>
+      <p>Counterintuitively, raising Lambda memory can REDUCE cost. Cost = (memory) x (duration). If doubling memory more than halves duration (because of the extra CPU), total cost drops. This is why blindly setting Lambda to 128MB to "save money" is often wrong. Power Tuning measures the real curve.</p>
+    </div>
+
+    <h2 class="sec">8.3 Connection Management</h2>
+    <p>Lambda scales horizontally — each concurrent execution is a separate environment with its own connections. This breaks traditional connection pooling against RDS.</p>
+    <ul class="book-list">
+      <li><strong>RDS Proxy:</strong> managed connection pooler between Lambda and RDS. Thousands of Lambda connections multiplex into a small RDS pool. Essential for Lambda + RDS at scale.</li>
+      <li><strong>DynamoDB:</strong> no connection limit problem — it is HTTP-based, stateless. Prefer it for highly concurrent serverless workloads.</li>
+      <li><strong>Reuse connections:</strong> open the connection in module scope, not inside the handler, so warm invocations reuse it.</li>
+    </ul>
+
+    <h2 class="sec">8.4 DynamoDB Performance</h2>
+    <ul class="book-list">
+      <li>Avoid hot partitions with high-cardinality partition keys or write sharding</li>
+      <li>Use eventually consistent reads (half the RCU cost) when strong consistency is not required</li>
+      <li>Use BatchGetItem / BatchWriteItem to reduce round trips</li>
+      <li>Use Query, never Scan, for predictable performance</li>
+      <li>DAX for read-heavy, repeated-read workloads</li>
+    </ul>
+
+    <div class="checklist">
+      <div class="cl-title">✓ Progress Checklist · Chapter 8</div>
+      <ul>
+        <li>I know the four caching layers and which data source each fits</li>
+        <li>I understand Lambda memory/CPU relationship and why higher memory can be cheaper</li>
+        <li>I know RDS Proxy solves the Lambda connection explosion problem</li>
+        <li>I know DynamoDB performance levers (partition design, consistency, batching, Query vs Scan)</li>
+      </ul>
+    </div>
+  </div>
+  <div class="pg-footer">AWS Mastery Series &nbsp;|&nbsp; Book 3: DVA-C02 &nbsp;|&nbsp; Author: Faizan H.</div>
+</section>
+
+<!-- ===== CHAPTER 09 ===== -->
+<section class="page page-interior" id="ch-9">
+  <div class="inner">
+    <p class="chap-num">Chapter 09</p>
+    <h1 class="page-title">Cost Optimization at the Architecture Level</h1>
+    <p class="byline">Service selection and pricing-model decisions</p>
+    <div class="title-rule"></div>
+    <p>Cost optimization on the DVA-C02 exam is rarely about a single setting — it is about choosing the right service and pricing model for the workload shape. This chapter covers the architectural cost decisions.</p>
+
+    <h2 class="sec">9.1 Serverless vs Provisioned Cost Shape</h2>
+    <div class="tbl-wrap">
+      <table class="book">
+        <thead><tr><th style="width:26%">Workload Shape</th><th>Cost-Optimal Choice</th><th>Why</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Spiky, unpredictable</strong></td><td>Lambda + DynamoDB On-Demand</td><td>Pay per use; scales to zero</td></tr>
+          <tr><td><strong>Steady, high, predictable</strong></td><td>EC2 Reserved / ECS + Provisioned</td><td>Commitment discounts beat per-use</td></tr>
+          <tr><td><strong>Batch, interruptible</strong></td><td>EC2 Spot / Fargate Spot</td><td>Up to 90% off for fault-tolerant work</td></tr>
+          <tr><td><strong>Variable within a band</strong></td><td>Provisioned + Auto Scaling</td><td>Baseline reserved, burst on demand</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout exam">
+      <div class="c-label"><span class="c-icon">!</span><span class="c-tag">Exam Trap</span> · Lambda Is Not Always Cheapest</div>
+      <p>Lambda is cost-optimal for spiky, low-to-moderate, or unpredictable traffic. For sustained high-throughput workloads running 24/7, a provisioned container or EC2 with Reserved/Savings Plans is often cheaper than Lambda at that volume. The exam tests the crossover: "constant heavy load" leans provisioned, "spiky or idle-heavy" leans serverless.</p>
+    </div>
+
+    <h2 class="sec">9.2 Data Transfer Costs</h2>
+    <ul class="book-list">
+      <li>Data IN to AWS is free; data OUT to the internet is charged</li>
+      <li>Same-AZ traffic is free; cross-AZ and cross-region traffic is charged</li>
+      <li>VPC endpoints (Gateway endpoints for S3/DynamoDB) avoid NAT Gateway data charges</li>
+      <li>CloudFront reduces origin data transfer cost by serving from cache</li>
+    </ul>
+    <div class="callout exam">
+      <div class="c-label"><span class="c-icon">!</span><span class="c-tag">Exam Trap</span> · NAT Gateway Data Processing Charges</div>
+      <p>A NAT Gateway charges both per-hour AND per-GB processed. A Lambda or EC2 in a private subnet pulling large amounts from S3 through a NAT Gateway racks up data processing costs. Fix: use a Gateway VPC Endpoint for S3 and DynamoDB — traffic bypasses the NAT Gateway entirely and the endpoint is free. This is a frequent cost-optimization answer.</p>
+    </div>
+
+    <h2 class="sec">9.3 Storage and Compute Cost Levers</h2>
+    <ul class="book-list">
+      <li>S3 lifecycle policies → transition cold data to cheaper classes (IA, Glacier)</li>
+      <li>S3 Intelligent-Tiering for unpredictable access patterns</li>
+      <li>EBS: delete unattached volumes and old snapshots</li>
+      <li>Compute Optimizer: right-size over-provisioned EC2/Lambda</li>
+      <li>Savings Plans: flexible commitment discount across EC2, Fargate, Lambda</li>
+    </ul>
+
+    <div class="checklist">
+      <div class="cl-title">✓ Progress Checklist · Chapter 9</div>
+      <ul>
+        <li>I can match workload shape to cost-optimal compute and pricing model</li>
+        <li>I know when Lambda is NOT the cheapest option</li>
+        <li>I understand data transfer cost rules and the NAT Gateway charge trap</li>
+        <li>I know VPC Gateway Endpoints avoid NAT data charges for S3/DynamoDB</li>
+        <li>I know storage and compute cost-reduction levers</li>
+      </ul>
+    </div>
+  </div>
+  <div class="pg-footer">AWS Mastery Series &nbsp;|&nbsp; Book 3: DVA-C02 &nbsp;|&nbsp; Author: Faizan H.</div>
+</section>
+
+<!-- ===== CHAPTER 10 ===== -->
+<section class="page page-interior" id="ch-10">
+  <div class="inner">
+    <p class="chap-num">Chapter 10</p>
+    <h1 class="page-title">Observability and Troubleshooting</h1>
+    <p class="byline">Tracing, structured logging, and debugging distributed systems</p>
+    <div class="title-rule"></div>
+    <p>When a request flows through API Gateway, Lambda, DynamoDB, and SQS, finding where it failed requires real observability. This chapter covers X-Ray deep, structured logging, and the troubleshooting patterns DVA-C02 tests.</p>
+
+    <h2 class="sec">10.1 X-Ray Deep Dive</h2>
+    <ul class="book-list">
+      <li><strong>Trace:</strong> the full path of one request across services</li>
+      <li><strong>Segment / Subsegment:</strong> a service's work and its internal operations</li>
+      <li><strong>Annotations:</strong> indexed — filter traces by them (e.g., userId)</li>
+      <li><strong>Metadata:</strong> not indexed — extra debug context</li>
+      <li><strong>Service Map:</strong> visual graph of services, latency, and error rates</li>
+      <li><strong>Sampling:</strong> traces a subset (default 1 req/sec + 5%) to control cost</li>
+    </ul>
+    <div class="callout exam">
+      <div class="c-label"><span class="c-icon">!</span><span class="c-tag">Exam Trap</span> · Active Tracing + SDK Both Needed</div>
+      <p>For full Lambda tracing you need BOTH: enable Active Tracing on the function, AND instrument the code with the X-Ray SDK (or Powertools Tracer) to capture downstream calls. Active Tracing alone traces only the invocation; the SDK traces calls to DynamoDB, S3, HTTP, etc. as subsegments.</p>
+    </div>
+
+    <h2 class="sec">10.2 Structured Logging</h2>
+    <p>Plain text logs do not scale. Structured JSON logs let CloudWatch Logs Insights query by field. Include a correlation ID on every log line so you can trace one request across multiple Lambda invocations.</p>
+    <div class="callout backend">
+      <div class="c-label"><span class="c-icon">&lt;/&gt;</span><span class="c-tag">Backend Dev Angle</span><span class="lang-chip">Node.js</span></div>
+      <p>Structured logging with a correlation ID using Powertools Logger:</p>
+      <div class="code"><span class="key">const</span> { Logger } = require(<span class="str">"@aws-lambda-powertools/logger"</span>);
+<span class="key">const</span> logger = <span class="key">new</span> Logger({ serviceName: <span class="str">"orders"</span> });
+logger.appendKeys({ correlationId: event.headers[<span class="str">"x-correlation-id"</span>] });
+logger.info(<span class="str">"Processing order"</span>, { orderId, userId });
+<span class="cmt">// Emits JSON — queryable in CloudWatch Logs Insights by orderId, correlationId, etc.</span></div>
+    </div>
+
+    <h2 class="sec">10.3 Troubleshooting Patterns</h2>
+    <div class="tbl-wrap">
+      <table class="book">
+        <thead><tr><th style="width:34%">Symptom</th><th>Likely Cause / Investigation</th></tr></thead>
+        <tbody>
+          <tr><td><strong>API Gateway 504</strong></td><td>Integration timeout exceeded (max 29s) — check Lambda duration</td></tr>
+          <tr><td><strong>API Gateway 502</strong></td><td>Lambda returned malformed response or crashed</td></tr>
+          <tr><td><strong>API Gateway 429</strong></td><td>Throttling — account/stage/method rate limit or usage plan</td></tr>
+          <tr><td><strong>Lambda timeout</strong></td><td>Downstream call hanging; check VPC/ENI, RDS connections, external API</td></tr>
+          <tr><td><strong>SQS message reprocessed</strong></td><td>Visibility timeout shorter than processing time</td></tr>
+          <tr><td><strong>DynamoDB throttling</strong></td><td>Hot partition or insufficient provisioned capacity</td></tr>
+          <tr><td><strong>KMS AccessDenied</strong></td><td>Key policy does not grant the principal (not just IAM)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 class="sec">10.4 CloudWatch for Troubleshooting</h2>
+    <ul class="book-list">
+      <li><strong>Logs Insights:</strong> query structured logs across log groups</li>
+      <li><strong>Metric Filters:</strong> turn log patterns (e.g., "ERROR") into metrics and alarm on them</li>
+      <li><strong>ServiceLens:</strong> combines X-Ray traces with CloudWatch metrics and logs in one view</li>
+      <li><strong>Synthetics canaries:</strong> detect failures before users do</li>
+    </ul>
+
+    <div class="checklist">
+      <div class="cl-title">✓ Progress Checklist · Chapter 10</div>
+      <ul>
+        <li>I understand X-Ray traces, segments, annotations vs metadata, sampling</li>
+        <li>I know Active Tracing AND the SDK are both required for full tracing</li>
+        <li>I understand structured logging and correlation IDs</li>
+        <li>I can map common error symptoms to root causes</li>
+        <li>I know CloudWatch Logs Insights, Metric Filters, and ServiceLens</li>
+      </ul>
+    </div>
+  </div>
+  <div class="pg-footer">AWS Mastery Series &nbsp;|&nbsp; Book 3: DVA-C02 &nbsp;|&nbsp; Author: Faizan H.</div>
+</section>
+
+<!-- ===== CHAPTER 11 ===== -->
+<section class="page page-interior" id="ch-11">
+  <div class="inner">
+    <p class="chap-num">Chapter 11</p>
+    <h1 class="page-title">Resilience and Error Handling</h1>
+    <p class="byline">Retries, idempotency, circuit breakers, and DLQ strategy</p>
+    <div class="title-rule"></div>
+    <p>Distributed systems fail partially and constantly. Resilience is designing so that those failures do not become outages or data corruption. This chapter covers the patterns DVA-C02 expects.</p>
+
+    <h2 class="sec">11.1 Retries and Backoff</h2>
+    <ul class="book-list">
+      <li><strong>Exponential backoff:</strong> increasing delay between retries (1s, 2s, 4s, 8s) to avoid hammering a struggling service</li>
+      <li><strong>Jitter:</strong> add randomness to backoff so many clients do not retry in sync (the "thundering herd")</li>
+      <li><strong>AWS SDK:</strong> retries with exponential backoff and jitter automatically for throttling/5xx errors</li>
+      <li><strong>Max attempts:</strong> always cap retries — infinite retries amplify outages</li>
+    </ul>
+    <div class="callout exam">
+      <div class="c-label"><span class="c-icon">!</span><span class="c-tag">Exam Trap</span> · Retries Need Idempotency</div>
+      <p>Retrying a non-idempotent operation (e.g., "create order", "charge card") can create duplicates. Before adding retries to any write operation, ensure it is idempotent — typically via an idempotency key stored with a conditional write. Retries + non-idempotent writes = data corruption at scale.</p>
+    </div>
+
+    <h2 class="sec">11.2 Dead Letter Queues and Failure Destinations</h2>
+    <div class="tbl-wrap">
+      <table class="book">
+        <thead><tr><th style="width:24%">Mechanism</th><th>Applies To</th><th>Captures</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Lambda DLQ</strong></td><td>Async Lambda</td><td>Events that failed after all retries (SQS/SNS only)</td></tr>
+          <tr><td><strong>Lambda Destinations</strong></td><td>Async Lambda</td><td>Both success and failure outcomes (4 target types)</td></tr>
+          <tr><td><strong>SQS DLQ</strong></td><td>SQS queues</td><td>Messages exceeding maxReceiveCount</td></tr>
+          <tr><td><strong>Step Functions Catch</strong></td><td>Workflows</td><td>Routes failed states to a handler/compensation</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 class="sec">11.3 Circuit Breaker Pattern</h2>
+    <p>When a downstream dependency is failing, continuing to call it wastes resources and worsens the problem. A circuit breaker tracks failures and "opens" after a threshold — short-circuiting calls and failing fast — then periodically tests if the dependency has recovered before "closing" again.</p>
+
+    <h2 class="sec">11.4 Decoupling for Resilience</h2>
+    <ul class="book-list">
+      <li>Put a queue (SQS) between producer and consumer so a slow/down consumer does not break the producer</li>
+      <li>Use async patterns so a failure in one path does not cascade</li>
+      <li>Set timeouts on every external call — never wait indefinitely</li>
+      <li>Design for graceful degradation: serve cached/partial data when a dependency is down</li>
+    </ul>
+
+    <div class="checklist">
+      <div class="cl-title">✓ Progress Checklist · Chapter 11</div>
+      <ul>
+        <li>I understand exponential backoff with jitter and why both matter</li>
+        <li>I know retries require idempotency for write operations</li>
+        <li>I know the DLQ and failure-destination mechanisms across services</li>
+        <li>I understand the circuit breaker pattern</li>
+        <li>I know how queues and timeouts improve resilience</li>
+      </ul>
+    </div>
+  </div>
+  <div class="pg-footer">AWS Mastery Series &nbsp;|&nbsp; Book 3: DVA-C02 &nbsp;|&nbsp; Author: Faizan H.</div>
+</section>
+
+<!-- ===== CHAPTER 12 ===== -->
+<section class="page page-interior" id="ch-12">
+  <div class="inner">
+    <p class="chap-num">Chapter 12</p>
+    <h1 class="page-title">Exam Mastery and Mock Simulation</h1>
+    <p class="byline">Final strategy and the hardest scenario patterns</p>
+    <div class="title-rule"></div>
+    <p>You have the knowledge. This chapter sharpens exam technique and drills the advanced scenario patterns that decide pass or fail on DVA-C02.</p>
+
+    <h2 class="sec">12.1 DVA-C02 Exam Recap</h2>
+    <div class="tbl-wrap">
+      <table class="book">
+        <thead><tr><th style="width:26%">Detail</th><th>Information</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Duration</strong></td><td>130 minutes</td></tr>
+          <tr><td><strong>Questions</strong></td><td>65 (50 scored + 15 unscored)</td></tr>
+          <tr><td><strong>Passing Score</strong></td><td>720 / 1000</td></tr>
+          <tr><td><strong>Cost</strong></td><td>$150 USD</td></tr>
+          <tr><td><strong>Domains</strong></td><td>Development 32% | Security 26% | Deployment 24% | Troubleshooting 18%</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 class="sec">12.2 How to Read Advanced Scenario Questions</h2>
+    <ul class="book-list">
+      <li>Identify the REAL constraint — cost, latency, security, or operational simplicity. The right answer optimizes for it.</li>
+      <li>Eliminate answers that technically work but are not optimal — advanced questions have multiple working options.</li>
+      <li>Watch for keywords: "most cost-effective", "least operational overhead", "minimal code change", "highest availability".</li>
+      <li>"Least operational overhead" almost always favors managed/serverless over self-managed.</li>
+      <li>"Minimal code change" favors drop-in solutions (DAX, RDS Proxy, caching) over re-architecture.</li>
+    </ul>
+
+    <h2 class="sec">12.3 Advanced Scenario Pattern Bank</h2>
+    <div class="tbl-wrap">
+      <table class="book">
+        <thead><tr><th style="width:50%">Scenario Signal</th><th>Optimal Answer</th></tr></thead>
+        <tbody>
+          <tr><td>Multi-step workflow with rollback</td><td><strong>Step Functions (saga via Catch)</strong></td></tr>
+          <tr><td>New team added, policy sprawl</td><td><strong>ABAC with tag-matching policy</strong></td></tr>
+          <tr><td>Repeated identical DynamoDB reads, no code change</td><td><strong>DAX</strong></td></tr>
+          <tr><td>Lambda exhausting RDS connections</td><td><strong>RDS Proxy</strong></td></tr>
+          <tr><td>Query attribute not in key, existing table</td><td><strong>Add a GSI</strong></td></tr>
+          <tr><td>Query only a small subset by status</td><td><strong>Sparse GSI</strong></td></tr>
+          <tr><td>Large S3 pulls via NAT racking up cost</td><td><strong>S3 Gateway VPC Endpoint</strong></td></tr>
+          <tr><td>Duplicate processing in SQS Standard + Lambda</td><td><strong>Idempotency or FIFO</strong></td></tr>
+          <tr><td>Stream blocked by one bad record</td><td><strong>Bisect batch + failure destination</strong></td></tr>
+          <tr><td>Connect DynamoDB Stream to target, no glue code</td><td><strong>EventBridge Pipes</strong></td></tr>
+          <tr><td>Human approval mid-workflow</td><td><strong>Step Functions callback (.waitForTaskToken)</strong></td></tr>
+          <tr><td>KMS AccessDenied despite IAM allow</td><td><strong>Fix the KMS key policy</strong></td></tr>
+          <tr><td>Cross-account S3 access fails</td><td><strong>Add the missing side of the handshake</strong></td></tr>
+          <tr><td>Constant 24/7 heavy load, cost</td><td><strong>Provisioned (Reserved/Savings Plans), not Lambda</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 class="sec">12.4 Final Week Plan</h2>
+    <div class="tbl-wrap">
+      <table class="book">
+        <thead><tr><th style="width:20%">Day</th><th>Focus</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Day 1-2</strong></td><td>Re-read all Exam Trap boxes across Books 2 and 3</td></tr>
+          <tr><td><strong>Day 3</strong></td><td>Master cheat sheets (Book 2 + Book 3 Appendix A)</td></tr>
+          <tr><td><strong>Day 4</strong></td><td>Full mock exam #1 — review every wrong answer</td></tr>
+          <tr><td><strong>Day 5</strong></td><td>Drill weak domains identified in mock #1</td></tr>
+          <tr><td><strong>Day 6</strong></td><td>Full mock exam #2 — aim for 85%+</td></tr>
+          <tr><td><strong>Day 7</strong></td><td>Light review of cheat sheets only. Rest. Exam day.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout tip">
+      <div class="c-label"><span class="c-icon">★</span><span class="c-tag">Tip</span> · The Night Before</div>
+      <p>Do not learn new material the night before. Review cheat sheets and the scenario pattern bank only. Sleep well — a rested brain reasons through scenario questions far better than a tired one cramming facts. You have done the work across three books. Trust it.</p>
+    </div>
+
+    <div class="checklist">
+      <div class="cl-title">✓ Progress Checklist · Chapter 12 + Final Readiness</div>
+      <ul>
+        <li>I know the DVA-C02 format and domain weights cold</li>
+        <li>I read scenario questions for the real constraint being optimized</li>
+        <li>I have internalized the advanced scenario pattern bank</li>
+        <li>I have scored 85%+ on at least two full mock exams</li>
+        <li>I have reviewed every Exam Trap across Books 2 and 3</li>
+        <li>I am ready to sit the DVA-C02 exam</li>
+      </ul>
+    </div>
+  </div>
+  <div class="pg-footer">AWS Mastery Series &nbsp;|&nbsp; Book 3: DVA-C02 &nbsp;|&nbsp; Author: Faizan H.</div>
+</section>
+
+<!-- ===== APPENDIX A — CHEAT SHEET ===== -->
+<section class="page page-interior" id="appendix-a">
+  <div class="inner">
+    <p class="eyebrow">Appendix A</p>
+    <h1 class="page-title">DVA-C02 Advanced Cheat Sheet</h1>
+    <p class="byline">Rapid revision for the advanced topics in this book. Use alongside the Book 2 cheat sheet.</p>
+    <div class="title-rule"></div>
+
+    <h2 class="sec">Orchestration and Events</h2>
+    <div class="tbl-wrap">
+      <table class="book">
+        <thead><tr><th style="width:34%">Concept</th><th>Key Point</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Step Functions Standard</strong></td><td>Exactly-once, up to 1 year, full history, per-transition pricing</td></tr>
+          <tr><td><strong>Step Functions Express</strong></td><td>At-least-once, up to 5 min, high volume, per-execution pricing</td></tr>
+          <tr><td><strong>Saga pattern</strong></td><td>Sequence with compensating actions via Catch states</td></tr>
+          <tr><td><strong>Callback (.waitForTaskToken)</strong></td><td>Pause until external/human callback</td></tr>
+          <tr><td><strong>Map state</strong></td><td>Dynamic parallelism over an array</td></tr>
+          <tr><td><strong>EventBridge Bus</strong></td><td>One-to-many routing by rules</td></tr>
+          <tr><td><strong>EventBridge Pipes</strong></td><td>Point-to-point source to target, filter + enrich, no glue code</td></tr>
+          <tr><td><strong>Choreography</strong></td><td>Distributed reactions (EventBridge/SNS)</td></tr>
+          <tr><td><strong>Orchestration</strong></td><td>Central coordinator (Step Functions)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 class="sec">DynamoDB Advanced</h2>
+    <div class="tbl-wrap">
+      <table class="book">
+        <thead><tr><th style="width:34%">Concept</th><th>Key Point</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Single-table design</strong></td><td>Multiple entity types in one table; design from access patterns</td></tr>
+          <tr><td><strong>Index overloading</strong></td><td>One GSI serves multiple access patterns</td></tr>
+          <tr><td><strong>Sparse index</strong></td><td>GSI key only on some items — query a subset efficiently</td></tr>
+          <tr><td><strong>Inverted index</strong></td><td>GSI swapping PK/SK for reverse lookups</td></tr>
+          <tr><td><strong>Write sharding</strong></td><td>Suffix the PK to spread a hot partition</td></tr>
+          <tr><td><strong>Hot partition</strong></td><td>Too much traffic on one PK — throttling</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 class="sec">Security Advanced</h2>
+    <div class="tbl-wrap">
+      <table class="book">
+        <thead><tr><th style="width:34%">Concept</th><th>Key Point</th></tr></thead>
+        <tbody>
+          <tr><td><strong>ABAC</strong></td><td>Tag-matching policy; scales without new policies per team</td></tr>
+          <tr><td><strong>SAML federation</strong></td><td>Corporate SSO via AssumeRoleWithSAML</td></tr>
+          <tr><td><strong>Web identity</strong></td><td>Social/OIDC via AssumeRoleWithWebIdentity</td></tr>
+          <tr><td><strong>Cross-account</strong></td><td>Two-sided: resource policy + identity policy both required</td></tr>
+          <tr><td><strong>KMS key policy</strong></td><td>Primary KMS access control — IAM alone is not enough</td></tr>
+          <tr><td><strong>Secrets rotation</strong></td><td>4-step Lambda: create, set, test, finish</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 class="sec">Performance and Cost</h2>
+    <div class="tbl-wrap">
+      <table class="book">
+        <thead><tr><th style="width:34%">Concept</th><th>Key Point</th></tr></thead>
+        <tbody>
+          <tr><td><strong>DAX</strong></td><td>Cache DynamoDB reads, microseconds, no code change</td></tr>
+          <tr><td><strong>ElastiCache</strong></td><td>Cache anything (RDS, sessions, computed results)</td></tr>
+          <tr><td><strong>RDS Proxy</strong></td><td>Connection pool for Lambda + RDS at scale</td></tr>
+          <tr><td><strong>Lambda memory</strong></td><td>CPU scales with memory; higher memory can be cheaper</td></tr>
+          <tr><td><strong>S3 Gateway Endpoint</strong></td><td>Avoid NAT data charges for S3/DynamoDB</td></tr>
+          <tr><td><strong>Lambda vs provisioned</strong></td><td>Serverless for spiky; provisioned for constant heavy load</td></tr>
+          <tr><td><strong>Spot</strong></td><td>Up to 90% off for interruptible/batch</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 class="sec">Resilience</h2>
+    <div class="tbl-wrap">
+      <table class="book">
+        <thead><tr><th style="width:34%">Concept</th><th>Key Point</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Exponential backoff + jitter</strong></td><td>Avoid hammering and thundering herd</td></tr>
+          <tr><td><strong>Idempotency</strong></td><td>Required before retrying any write</td></tr>
+          <tr><td><strong>Circuit breaker</strong></td><td>Fail fast when a dependency is down</td></tr>
+          <tr><td><strong>Bisect batch</strong></td><td>Isolate poison records in stream processing</td></tr>
+          <tr><td><strong>DLQ / Destinations</strong></td><td>Capture failed events for inspection/replay</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="pg-footer">AWS Mastery Series &nbsp;|&nbsp; Book 3: DVA-C02 &nbsp;|&nbsp; Author: Faizan H.</div>
+</section>
+
+<!-- ===== APPENDIX B — GLOSSARY ===== -->
+<section class="page page-interior" id="appendix-b">
+  <div class="inner">
+    <p class="eyebrow">Appendix B</p>
+    <h1 class="page-title">Glossary</h1>
+    <p class="byline">Key terms from the advanced guide, defined for quick reference.</p>
+    <div class="title-rule"></div>
+
+    <dl class="glossary">
+      <div class="gl"><dt>ABAC</dt><dd>Attribute-Based Access Control. Grants permissions by matching tags on principals and resources rather than by role.</dd></div>
+      <div class="gl"><dt>Backoff (Exponential)</dt><dd>Increasing the delay between retries (1s, 2s, 4s...) to avoid overwhelming a failing service.</dd></div>
+      <div class="gl"><dt>Bisect Batch</dt><dd>A Lambda event-source-mapping option that splits a failing batch to isolate the poison record.</dd></div>
+      <div class="gl"><dt>Callback Pattern</dt><dd>Step Functions pattern (.waitForTaskToken) that pauses until an external system calls back.</dd></div>
+      <div class="gl"><dt>Choreography</dt><dd>Event-driven design where services react independently to events, with no central coordinator.</dd></div>
+      <div class="gl"><dt>Circuit Breaker</dt><dd>A resilience pattern that stops calling a failing dependency after a failure threshold, failing fast.</dd></div>
+      <div class="gl"><dt>Compensating Transaction</dt><dd>An action that undoes a previous step in a saga when a later step fails.</dd></div>
+      <div class="gl"><dt>Cross-Stack Reference</dt><dd>Sharing values between CloudFormation stacks via Export and Fn::ImportValue.</dd></div>
+      <div class="gl"><dt>Custom Resource</dt><dd>A CloudFormation resource backed by a Lambda for actions CloudFormation does not natively support.</dd></div>
+      <div class="gl"><dt>DAX</dt><dd>DynamoDB Accelerator. In-memory cache for DynamoDB reads, microsecond latency, API-compatible.</dd></div>
+      <div class="gl"><dt>EventBridge Pipes</dt><dd>Point-to-point integration: source to target with optional filtering and enrichment, no glue code.</dd></div>
+      <div class="gl"><dt>Fan-In</dt><dd>Aggregating results from many parallel workers back into a single outcome.</dd></div>
+      <div class="gl"><dt>Fan-Out</dt><dd>Distributing one event to many parallel consumers (e.g., SNS to multiple SQS queues).</dd></div>
+      <div class="gl"><dt>Federation</dt><dd>Granting AWS access to identities authenticated by an external provider (SAML, OIDC, social).</dd></div>
+      <div class="gl"><dt>Hot Partition</dt><dd>A DynamoDB partition receiving disproportionate traffic, causing throttling.</dd></div>
+      <div class="gl"><dt>Idempotency</dt><dd>Property where processing the same request multiple times yields the same result as once.</dd></div>
+      <div class="gl"><dt>Index Overloading</dt><dd>Using one GSI to serve multiple access patterns by storing varied entity types.</dd></div>
+      <div class="gl"><dt>Inverted Index</dt><dd>A GSI that swaps partition and sort keys to enable reverse lookups.</dd></div>
+      <div class="gl"><dt>Jitter</dt><dd>Randomness added to retry backoff to prevent synchronized retry storms.</dd></div>
+      <div class="gl"><dt>Map State</dt><dd>A Step Functions state that runs the same steps for each item in an array (dynamic parallelism).</dd></div>
+      <div class="gl"><dt>Nested Stack</dt><dd>A CloudFormation stack created and managed by a parent stack as a reusable component.</dd></div>
+      <div class="gl"><dt>Orchestration</dt><dd>Coordinating a multi-step process from a central controller (Step Functions).</dd></div>
+      <div class="gl"><dt>Saga</dt><dd>A sequence of transactions where each step has a compensating action for rollback on failure.</dd></div>
+      <div class="gl"><dt>Single-Table Design</dt><dd>Storing multiple DynamoDB entity types in one table, modeled around access patterns.</dd></div>
+      <div class="gl"><dt>Sparse Index</dt><dd>A GSI that indexes only items possessing the GSI key attribute — efficient subset queries.</dd></div>
+      <div class="gl"><dt>StackSet</dt><dd>A CloudFormation feature deploying one template across multiple accounts and regions.</dd></div>
+      <div class="gl"><dt>Step Functions</dt><dd>AWS serverless orchestration service for coordinating workflows as state machines.</dd></div>
+      <div class="gl"><dt>Write Sharding</dt><dd>Spreading writes across partitions by adding a suffix to the partition key.</dd></div>
+      <div class="gl"><dt>X-Ray Annotation</dt><dd>Indexed key-value data on a trace segment, usable to filter and search traces.</dd></div>
+      <div class="gl"><dt>X-Ray Metadata</dt><dd>Non-indexed contextual data attached to a trace segment for debugging.</dd></div>
+    </dl>
+  </div>
+  <div class="pg-footer">AWS Mastery Series &nbsp;|&nbsp; Book 3: DVA-C02 &nbsp;|&nbsp; Author: Faizan H.</div>
+</section>
+
+<!-- ===== APPENDIX C — QUESTION BANK ===== -->
+<section class="page page-interior" id="appendix-c">
+  <div class="inner">
+    <p class="eyebrow">Appendix C</p>
+    <h1 class="page-title">Question Bank</h1>
+    <p class="byline">Advanced DVA-C02 questions across all 12 chapters. Attempt each before revealing the answer.</p>
+    <div class="title-rule"></div>
+
+    <!-- PART 1 -->
+    <h2 class="qb-part-head">Part 1 — Multiple Choice Questions (18 Questions)</h2>
+    <p class="qb-part-sub">Select the BEST single answer.</p>
+
+    <div class="q-card">
+      <div class="q-num">Question 1</div>
+      <p class="q-stem">A multi-step order workflow must process payment, reserve inventory, and ship — with automatic rollback if any step fails. Which service is best?</p>
+      <ul class="q-options">
+        <li><span class="opt">A</span><span>SQS FIFO queue</span></li>
+        <li><span class="opt">B</span><span>AWS Step Functions with Catch states</span></li>
+        <li><span class="opt">C</span><span>SNS fan-out</span></li>
+        <li><span class="opt">D</span><span>EventBridge rules</span></li>
+      </ul>
+      <div class="answer"><span class="a-label">Correct Answer: B</span><p>Step Functions orchestrates multi-step workflows and implements the saga pattern via Catch states for compensating rollback. SQS/SNS/EventBridge are choreography — no central rollback coordination.</p></div>
+    </div>
+
+    <div class="q-card">
+      <div class="q-num">Question 2</div>
+      <p class="q-stem">A company creates a new IAM policy every time a team is added, causing policy sprawl. What scales better?</p>
+      <ul class="q-options">
+        <li><span class="opt">A</span><span>Add all users to one admin group</span></li>
+        <li><span class="opt">B</span><span>ABAC using tag-matching policies</span></li>
+        <li><span class="opt">C</span><span>One IAM role shared by everyone</span></li>
+        <li><span class="opt">D</span><span>Resource policies on every resource</span></li>
+      </ul>
+      <div class="answer"><span class="a-label">Correct Answer: B</span><p>ABAC writes one policy matching principal tags to resource tags. New teams need only tags, not new policies. RBAC multiplies policies per team.</p></div>
+    </div>
+
+    <div class="q-card">
+      <div class="q-num">Question 3</div>
+      <p class="q-stem">Repeated identical reads of the same DynamoDB items cause throttling during traffic spikes. The team wants microsecond latency with no application code changes. What should they use?</p>
+      <ul class="q-options">
+        <li><span class="opt">A</span><span>ElastiCache Redis</span></li>
+        <li><span class="opt">B</span><span>Increase RCUs permanently</span></li>
+        <li><span class="opt">C</span><span>DynamoDB DAX</span></li>
+        <li><span class="opt">D</span><span>Read replicas</span></li>
+      </ul>
+      <div class="answer"><span class="a-label">Correct Answer: C</span><p>DAX is DynamoDB-API-compatible — change the endpoint, no code change — and caches reads at microsecond latency. ElastiCache requires code changes; DynamoDB has no read replicas.</p></div>
+    </div>
+
+    <div class="q-card">
+      <div class="q-num">Question 4</div>
+      <p class="q-stem">A Lambda function at high concurrency exhausts the RDS connection limit. What is the correct fix?</p>
+      <ul class="q-options">
+        <li><span class="opt">A</span><span>Increase Lambda memory</span></li>
+        <li><span class="opt">B</span><span>Use RDS Proxy</span></li>
+        <li><span class="opt">C</span><span>Switch to DynamoDB</span></li>
+        <li><span class="opt">D</span><span>Add reserved concurrency only</span></li>
+      </ul>
+      <div class="answer"><span class="a-label">Correct Answer: B</span><p>RDS Proxy pools and multiplexes Lambda connections into a small set of real DB connections. Reserved concurrency could cap connections but throttles legitimate traffic; RDS Proxy is the intended solution.</p></div>
+    </div>
+
+    <div class="q-card">
+      <div class="q-num">Question 5</div>
+      <p class="q-stem">A DynamoDB table (PK=userId) must now be queried by productId. The table already has production data. What is correct?</p>
+      <ul class="q-options">
+        <li><span class="opt">A</span><span>Create an LSI on productId</span></li>
+        <li><span class="opt">B</span><span>Create a GSI with productId as partition key</span></li>
+        <li><span class="opt">C</span><span>Recreate the table</span></li>
+        <li><span class="opt">D</span><span>Scan and filter</span></li>
+      </ul>
+      <div class="answer"><span class="a-label">Correct Answer: B</span><p>A GSI can have a different partition key and be added to an existing table. LSIs cannot be added after creation; scanning is inefficient.</p></div>
+    </div>
+
+    <div class="q-card">
+      <div class="q-num">Question 6</div>
+      <p class="q-stem">An app needs to efficiently query only orders with status=OPEN, a small subset of millions of orders. What is the most efficient design?</p>
+      <ul class="q-options">
+        <li><span class="opt">A</span><span>Scan with a filter expression</span></li>
+        <li><span class="opt">B</span><span>A sparse GSI keyed only on open orders</span></li>
+        <li><span class="opt">C</span><span>A second full table</span></li>
+        <li><span class="opt">D</span><span>DAX</span></li>
+      </ul>
+      <div class="answer"><span class="a-label">Correct Answer: B</span><p>A sparse index includes only items that have the GSI key attribute. Add the key only to OPEN orders; querying the GSI returns just those, far cheaper than scanning everything.</p></div>
+    </div>
+
+    <div class="q-card">
+      <div class="q-num">Question 7</div>
+      <p class="q-stem">A Lambda in a private subnet pulls large volumes from S3 through a NAT Gateway, incurring high data processing charges. What reduces cost?</p>
+      <ul class="q-options">
+        <li><span class="opt">A</span><span>Move Lambda to a public subnet</span></li>
+        <li><span class="opt">B</span><span>Use an S3 Gateway VPC Endpoint</span></li>
+        <li><span class="opt">C</span><span>Enable S3 Transfer Acceleration</span></li>
+        <li><span class="opt">D</span><span>Use a larger NAT Gateway</span></li>
+      </ul>
+      <div class="answer"><span class="a-label">Correct Answer: B</span><p>An S3 Gateway VPC Endpoint routes S3 traffic privately, bypassing the NAT Gateway and its per-GB data processing charges. The endpoint itself is free.</p></div>
+    </div>
+
+    <div class="q-card">
+      <div class="q-num">Question 8</div>
+      <p class="q-stem">An SQS Standard queue feeding a Lambda occasionally causes the same payment to be processed twice. What is the root issue?</p>
+      <ul class="q-options">
+        <li><span class="opt">A</span><span>Visibility timeout too long</span></li>
+        <li><span class="opt">B</span><span>Lambda lacks idempotency for at-least-once delivery</span></li>
+        <li><span class="opt">C</span><span>Queue is encrypted</span></li>
+        <li><span class="opt">D</span><span>Lambda memory too low</span></li>
+      </ul>
+      <div class="answer"><span class="a-label">Correct Answer: B</span><p>SQS Standard is at-least-once — duplicates happen. Non-idempotent processing double-charges. Add idempotency (or use FIFO with deduplication).</p></div>
+    </div>
+
+    <div class="q-card">
+      <div class="q-num">Question 9</div>
+      <p class="q-stem">Processing a Kinesis stream with Lambda halts entirely when one record fails. What fixes this without losing the bad record?</p>
+      <ul class="q-options">
+        <li><span class="opt">A</span><span>Increase shard count</span></li>
+        <li><span class="opt">B</span><span>Enable bisect-batch-on-error and a failure destination</span></li>
+        <li><span class="opt">C</span><span>Switch to SQS</span></li>
+        <li><span class="opt">D</span><span>Increase Lambda timeout</span></li>
+      </ul>
+      <div class="answer"><span class="a-label">Correct Answer: B</span><p>A poison record blocks the shard. Bisecting the batch on error isolates the bad record, and a failure destination captures it, letting the rest proceed.</p></div>
+    </div>
+
+    <div class="q-card">
+      <div class="q-num">Question 10</div>
+      <p class="q-stem">A workflow must pause for human approval before continuing. Which Step Functions feature enables this?</p>
+      <ul class="q-options">
+        <li><span class="opt">A</span><span>Wait state</span></li>
+        <li><span class="opt">B</span><span>Callback pattern with .waitForTaskToken</span></li>
+        <li><span class="opt">C</span><span>Map state</span></li>
+        <li><span class="opt">D</span><span>Express workflow</span></li>
+      </ul>
+      <div class="answer"><span class="a-label">Correct Answer: B</span><p>The callback pattern (.waitForTaskToken) pauses execution until an external actor — such as a human approver — returns the task token. A Wait state only pauses for time.</p></div>
+    </div>
+
+    <div class="q-card">
+      <div class="q-num">Question 11</div>
+      <p class="q-stem">A user has kms:Decrypt in their IAM policy but gets AccessDenied decrypting an S3 object encrypted with SSE-KMS. Why?</p>
+      <ul class="q-options">
+        <li><span class="opt">A</span><span>The bucket policy denies them</span></li>
+        <li><span class="opt">B</span><span>The KMS key policy does not grant the principal</span></li>
+        <li><span class="opt">C</span><span>The object is corrupted</span></li>
+        <li><span class="opt">D</span><span>IAM does not support KMS</span></li>
+      </ul>
+      <div class="answer"><span class="a-label">Correct Answer: B</span><p>KMS access is governed primarily by the key policy. IAM permission alone is insufficient unless the key policy grants the principal (or delegates to IAM).</p></div>
+    </div>
+
+    <div class="q-card">
+      <div class="q-num">Question 12</div>
+      <p class="q-stem">Which workflow type is most cost-effective for processing thousands of short events per second?</p>
+      <ul class="q-options">
+        <li><span class="opt">A</span><span>Step Functions Standard</span></li>
+        <li><span class="opt">B</span><span>Step Functions Express</span></li>
+        <li><span class="opt">C</span><span>A single long Lambda</span></li>
+        <li><span class="opt">D</span><span>SQS only</span></li>
+      </ul>
+      <div class="answer"><span class="a-label">Correct Answer: B</span><p>Express workflows are priced per execution and duration, optimal for high-volume short-lived executions. Standard's per-transition pricing is costlier at that volume.</p></div>
+    </div>
+
+    <div class="q-card">
+      <div class="q-num">Question 13</div>
+      <p class="q-stem">A team wants to connect a DynamoDB Stream to a Step Function, with filtering, without writing glue Lambda code. What should they use?</p>
+      <ul class="q-options">
+        <li><span class="opt">A</span><span>EventBridge Bus</span></li>
+        <li><span class="opt">B</span><span>EventBridge Pipes</span></li>
+        <li><span class="opt">C</span><span>SNS</span></li>
+        <li><span class="opt">D</span><span>Kinesis Firehose</span></li>
+      </ul>
+      <div class="answer"><span class="a-label">Correct Answer: B</span><p>EventBridge Pipes provides point-to-point source-to-target integration with built-in filtering and enrichment — no custom glue code. The Bus is for one-to-many rule routing.</p></div>
+    </div>
+
+    <div class="q-card">
+      <div class="q-num">Question 14</div>
+      <p class="q-stem">A CloudFormation stack export cannot be deleted. Why?</p>
+      <ul class="q-options">
+        <li><span class="opt">A</span><span>Exports are permanent</span></li>
+        <li><span class="opt">B</span><span>Another stack still imports the value</span></li>
+        <li><span class="opt">C</span><span>The stack is in ROLLBACK</span></li>
+        <li><span class="opt">D</span><span>Exports require admin rights</span></li>
+      </ul>
+      <div class="answer"><span class="a-label">Correct Answer: B</span><p>CloudFormation blocks deleting or modifying an exported value while another stack imports it, to protect the dependency.</p></div>
+    </div>
+
+    <div class="q-card">
+      <div class="q-num">Question 15</div>
+      <p class="q-stem">A 24/7 high-throughput service runs constantly. The team currently uses Lambda and the bill is high. What is likely more cost-effective?</p>
+      <ul class="q-options">
+        <li><span class="opt">A</span><span>Add provisioned concurrency</span></li>
+        <li><span class="opt">B</span><span>Provisioned compute (ECS/EC2) with Savings Plans</span></li>
+        <li><span class="opt">C</span><span>Increase Lambda memory</span></li>
+        <li><span class="opt">D</span><span>Move to Step Functions</span></li>
+      </ul>
+      <div class="answer"><span class="a-label">Correct Answer: B</span><p>For sustained constant heavy load, provisioned compute with Reserved/Savings Plans is usually cheaper than per-invocation Lambda at that volume. Lambda wins for spiky/idle-heavy traffic, not constant load.</p></div>
+    </div>
+
+    <div class="q-card">
+      <div class="q-num">Question 16</div>
+      <p class="q-stem">Which approach gives a Lambda full distributed tracing across its DynamoDB and S3 calls?</p>
+      <ul class="q-options">
+        <li><span class="opt">A</span><span>Enable Active Tracing only</span></li>
+        <li><span class="opt">B</span><span>Enable Active Tracing AND instrument with the X-Ray SDK</span></li>
+        <li><span class="opt">C</span><span>Enable CloudTrail</span></li>
+        <li><span class="opt">D</span><span>Use structured logging only</span></li>
+      </ul>
+      <div class="answer"><span class="a-label">Correct Answer: B</span><p>Active Tracing traces only the invocation. The X-Ray SDK (or Powertools Tracer) is required to capture downstream calls as subsegments.</p></div>
+    </div>
+
+    <div class="q-card">
+      <div class="q-num">Question 17</div>
+      <p class="q-stem">Account B cannot read an S3 bucket in Account A even though Account A's bucket policy allows Account B. What is missing?</p>
+      <ul class="q-options">
+        <li><span class="opt">A</span><span>Account A must make the bucket public</span></li>
+        <li><span class="opt">B</span><span>Account B's IAM identity policy must allow the S3 action</span></li>
+        <li><span class="opt">C</span><span>Cross-account S3 is not supported</span></li>
+        <li><span class="opt">D</span><span>Account A must disable encryption</span></li>
+      </ul>
+      <div class="answer"><span class="a-label">Correct Answer: B</span><p>Cross-account access is a two-sided handshake: the resource policy (Account A) AND the caller's identity policy (Account B) must both allow it. Here Account B's IAM policy is missing the permission.</p></div>
+    </div>
+
+    <div class="q-card">
+      <div class="q-num">Question 18</div>
+      <p class="q-stem">A retried 'create payment' operation occasionally creates duplicate charges. What is the correct fix?</p>
+      <ul class="q-options">
+        <li><span class="opt">A</span><span>Remove all retries</span></li>
+        <li><span class="opt">B</span><span>Make the operation idempotent with an idempotency key</span></li>
+        <li><span class="opt">C</span><span>Increase the retry interval</span></li>
+        <li><span class="opt">D</span><span>Use a larger instance</span></li>
+      </ul>
+      <div class="answer"><span class="a-label">Correct Answer: B</span><p>Retries plus a non-idempotent write create duplicates. Implement idempotency — e.g., a conditional write on a unique idempotency key — so repeated processing has no additional effect.</p></div>
+    </div>
+
+    <!-- PART 2 -->
+    <h2 class="qb-part-head">Part 2 — Multiple Response Questions (5 Questions)</h2>
+    <p class="qb-part-sub">Select ALL correct answers as indicated.</p>
+
+    <div class="q-card">
+      <div class="q-num">Question 1</div>
+      <p class="q-stem">Which are valid ways to reduce Lambda cold start impact? (Select TWO)</p>
+      <ul class="q-options">
+        <li><span class="opt">A</span><span>Provisioned Concurrency</span></li>
+        <li><span class="opt">B</span><span>Larger deployment package</span></li>
+        <li><span class="opt">C</span><span>Initialize SDK clients outside the handler</span></li>
+        <li><span class="opt">D</span><span>Place Lambda in a VPC</span></li>
+        <li><span class="opt">E</span><span>Disable X-Ray</span></li>
+      </ul>
+      <div class="answer"><span class="a-label">Correct Answers: A, C</span><p>Provisioned Concurrency pre-warms environments. Initializing clients in module scope reuses them across warm invocations. Larger packages and VPC placement INCREASE cold starts.</p></div>
+    </div>
+
+    <div class="q-card">
+      <div class="q-num">Question 2</div>
+      <p class="q-stem">Which statements about single-table DynamoDB design are TRUE? (Select TWO)</p>
+      <ul class="q-options">
+        <li><span class="opt">A</span><span>Design begins from access patterns</span></li>
+        <li><span class="opt">B</span><span>It normalizes data like a relational DB</span></li>
+        <li><span class="opt">C</span><span>Related items can share a partition key</span></li>
+        <li><span class="opt">D</span><span>It requires one table per entity</span></li>
+        <li><span class="opt">E</span><span>Joins are performed at query time</span></li>
+      </ul>
+      <div class="answer"><span class="a-label">Correct Answers: A, C</span><p>Single-table design starts from access patterns and co-locates related items under a shared partition key. It deliberately denormalizes and has no joins.</p></div>
+    </div>
+
+    <div class="q-card">
+      <div class="q-num">Question 3</div>
+      <p class="q-stem">Which are required for successful cross-account access to an S3 bucket? (Select TWO)</p>
+      <ul class="q-options">
+        <li><span class="opt">A</span><span>The bucket must be public</span></li>
+        <li><span class="opt">B</span><span>A resource policy in the owner account granting the external principal</span></li>
+        <li><span class="opt">C</span><span>An identity policy in the caller account allowing the action</span></li>
+        <li><span class="opt">D</span><span>Disabling bucket encryption</span></li>
+        <li><span class="opt">E</span><span>A NAT Gateway</span></li>
+      </ul>
+      <div class="answer"><span class="a-label">Correct Answers: B, C</span><p>Cross-account access needs both sides: the resource owner grants the principal, and the caller's IAM allows the action. Public access and encryption changes are not required.</p></div>
+    </div>
+
+    <div class="q-card">
+      <div class="q-num">Question 4</div>
+      <p class="q-stem">Which are valid EventBridge Pipes capabilities? (Select TWO)</p>
+      <ul class="q-options">
+        <li><span class="opt">A</span><span>Filtering events before delivery</span></li>
+        <li><span class="opt">B</span><span>One-to-many fan-out by rules</span></li>
+        <li><span class="opt">C</span><span>Enrichment via Lambda or Step Functions</span></li>
+        <li><span class="opt">D</span><span>Replacing the default event bus</span></li>
+        <li><span class="opt">E</span><span>Acting as a CDN</span></li>
+      </ul>
+      <div class="answer"><span class="a-label">Correct Answers: A, C</span><p>Pipes filters and optionally enriches events between a single source and target. Fan-out by rules is the Bus, not Pipes.</p></div>
+    </div>
+
+    <div class="q-card">
+      <div class="q-num">Question 5</div>
+      <p class="q-stem">Which improve resilience in a distributed serverless system? (Select TWO)</p>
+      <ul class="q-options">
+        <li><span class="opt">A</span><span>Infinite retries with no cap</span></li>
+        <li><span class="opt">B</span><span>Exponential backoff with jitter</span></li>
+        <li><span class="opt">C</span><span>Idempotent write operations</span></li>
+        <li><span class="opt">D</span><span>Removing all timeouts</span></li>
+        <li><span class="opt">E</span><span>Synchronous tight coupling everywhere</span></li>
+      </ul>
+      <div class="answer"><span class="a-label">Correct Answers: B, C</span><p>Backoff with jitter prevents retry storms; idempotency makes retries safe. Infinite retries, no timeouts, and tight coupling all reduce resilience.</p></div>
+    </div>
+
+    <!-- PART 3 -->
+    <h2 class="qb-part-head">Part 3 — Short Answer / Fill in the Blank (10 Questions)</h2>
+    <p class="qb-part-sub">Answer before revealing.</p>
+
+    <div class="q-card q-saq">
+      <div class="q-num">Question 1</div>
+      <p class="q-stem">When should you choose Step Functions Standard over Express?</p>
+      <div class="answer"><span class="a-label">Answer</span><p>Standard for long-running (up to 1 year), exactly-once, auditable workflows needing full execution history — e.g., order fulfillment over days. Express for high-volume, short (under 5 min) executions where per-execution pricing is cheaper — e.g., thousands of event-processing runs per second. Standard is priced per state transition; Express per execution time.</p></div>
+    </div>
+
+    <div class="q-card q-saq">
+      <div class="q-num">Question 2</div>
+      <p class="q-stem">Explain the saga pattern and how Step Functions implements it.</p>
+      <div class="answer"><span class="a-label">Answer</span><p>A saga is a sequence of transactions where each step has a compensating action that undoes it. If a later step fails, the compensations for completed steps run in reverse to restore consistency (e.g., refund payment, release inventory). Step Functions implements this with Catch states routing failures to compensation states.</p></div>
+    </div>
+
+    <div class="q-card q-saq">
+      <div class="q-num">Question 3</div>
+      <p class="q-stem">Fill in the blank: A ______ index in DynamoDB includes only items that possess the index's key attribute, making it efficient to query a subset of items.</p>
+      <div class="answer"><span class="a-label">Answer</span><p><strong>sparse.</strong> By adding the GSI key attribute only to items you care about (e.g., status=OPEN), the index contains only that subset, so querying it avoids scanning all items.</p></div>
+    </div>
+
+    <div class="q-card q-saq">
+      <div class="q-num">Question 4</div>
+      <p class="q-stem">Why can raising Lambda memory sometimes reduce total cost?</p>
+      <div class="answer"><span class="a-label">Answer</span><p>Lambda CPU scales with allocated memory. Cost = memory x duration. If more memory (more CPU) makes the function finish more than proportionally faster, the reduced duration outweighs the higher per-ms price, lowering total cost. AWS Lambda Power Tuning finds the optimal point.</p></div>
+    </div>
+
+    <div class="q-card q-saq">
+      <div class="q-num">Question 5</div>
+      <p class="q-stem">What is the difference between an EventBridge Bus and EventBridge Pipes?</p>
+      <div class="answer"><span class="a-label">Answer</span><p>A Bus does one-to-many routing: events are matched by rules and sent to multiple targets (fan-out). Pipes is point-to-point: a single source connects to a single target with optional filtering and enrichment, replacing glue Lambda code. Bus = routing hub; Pipes = a smart connector.</p></div>
+    </div>
+
+    <div class="q-card q-saq">
+      <div class="q-num">Question 6</div>
+      <p class="q-stem">Why is KMS access control different from most AWS services?</p>
+      <div class="answer"><span class="a-label">Answer</span><p>For most services, IAM identity policies are the primary control. For KMS, the KMS KEY POLICY (resource-based) is primary — a principal needs the key policy to grant access (directly or by delegating to IAM). Having kms:Decrypt in IAM is insufficient if the key policy does not allow that principal, producing AccessDenied.</p></div>
+    </div>
+
+    <div class="q-card q-saq">
+      <div class="q-num">Question 7</div>
+      <p class="q-stem">Fill in the blank: Cross-account access requires both a ______ policy on the resource and an ______ policy on the calling principal.</p>
+      <div class="answer"><span class="a-label">Answer</span><p><strong>resource; identity.</strong> The resource owner grants the external principal via a resource (or trust) policy, and the caller's account grants its principal the action via an identity policy. Both sides are mandatory.</p></div>
+    </div>
+
+    <div class="q-card q-saq">
+      <div class="q-num">Question 8</div>
+      <p class="q-stem">How do you prevent a single poison record from blocking a Kinesis/DynamoDB stream processed by Lambda?</p>
+      <div class="answer"><span class="a-label">Answer</span><p>Enable 'bisect batch on function error' so Lambda splits the failing batch to isolate the bad record, and configure an on-failure destination (SQS/SNS) to capture it. This stops the poison record from blocking the shard while preserving it for inspection.</p></div>
+    </div>
+
+    <div class="q-card q-saq">
+      <div class="q-num">Question 9</div>
+      <p class="q-stem">What is ABAC and why does it scale better than RBAC for a fast-growing organization?</p>
+      <div class="answer"><span class="a-label">Answer</span><p>ABAC (Attribute-Based Access Control) grants permissions by matching tags on principals and resources rather than assigning roles. One tag-matching policy (e.g., allow when PrincipalTag/team equals ResourceTag/team) covers any number of teams. RBAC requires a new role/policy each time a team is added; ABAC requires only tagging, so it scales without policy sprawl.</p></div>
+    </div>
+
+    <div class="q-card q-saq">
+      <div class="q-num">Question 10</div>
+      <p class="q-stem">Why must a write operation be idempotent before adding retries, and how do you make it idempotent?</p>
+      <div class="answer"><span class="a-label">Answer</span><p>Retries can resend the same request, so a non-idempotent write (create order, charge card) executes multiple times, causing duplicates or double-charges. Make it idempotent with an idempotency key: store the key on first processing using a conditional write (attribute_not_exists). If the key already exists, the operation is a duplicate and is skipped, so repeated processing has no additional effect.</p></div>
+    </div>
+
+    <!-- PART 4 -->
+    <h2 class="qb-part-head">Part 4 — Scenario-Based Questions (4 Questions)</h2>
+    <p class="qb-part-sub">Advanced scenarios. Choose the optimal approach.</p>
+
+    <div class="q-card">
+      <div class="q-num">Scenario 1</div>
+      <p class="q-stem">A SaaS company processes tenant data and keeps creating new IAM policies as customers onboard, now hitting policy limits. Each tenant's resources are tagged with a tenantId. They need a scalable access model with minimal ongoing policy management.</p>
+      <ul class="q-options">
+        <li><span class="opt">A</span><span>Create one IAM role per tenant</span></li>
+        <li><span class="opt">B</span><span>Use ABAC with a policy matching PrincipalTag/tenantId to ResourceTag/tenantId</span></li>
+        <li><span class="opt">C</span><span>Make all resources public with application-level checks</span></li>
+        <li><span class="opt">D</span><span>Use a single shared admin role</span></li>
+      </ul>
+      <div class="answer"><span class="a-label">Correct Answer: B</span><p>ABAC with tag matching is the canonical solution for multi-tenant scale. One policy covers all tenants; onboarding a tenant requires only tagging, no new policies — eliminating policy sprawl and limit issues.</p></div>
+    </div>
+
+    <div class="q-card">
+      <div class="q-num">Scenario 2</div>
+      <p class="q-stem">An e-commerce checkout must: charge payment, reserve inventory, then create a shipment. If shipment creation fails, the payment must be refunded and inventory released. The process must be auditable and may take minutes. What architecture is best?</p>
+      <ul class="q-options">
+        <li><span class="opt">A</span><span>A single large Lambda with try/catch</span></li>
+        <li><span class="opt">B</span><span>SQS chain between three Lambdas</span></li>
+        <li><span class="opt">C</span><span>Step Functions Standard with Catch states implementing the saga pattern</span></li>
+        <li><span class="opt">D</span><span>EventBridge rules triggering each step</span></li>
+      </ul>
+      <div class="answer"><span class="a-label">Correct Answer: C</span><p>Step Functions Standard provides auditable, exactly-once orchestration with Catch states for compensating rollback (refund, release inventory) — the saga pattern. A single Lambda is fragile; SQS/EventBridge are choreography without central rollback coordination.</p></div>
+    </div>
+
+    <div class="q-card">
+      <div class="q-num">Scenario 3</div>
+      <p class="q-stem">A serverless API on Lambda + DynamoDB sees flash-sale spikes where the same few hot product items are read tens of thousands of times per second, causing throttling. The team wants the fix with the least code change and lowest added latency.</p>
+      <ul class="q-options">
+        <li><span class="opt">A</span><span>Switch DynamoDB to provisioned with huge RCUs</span></li>
+        <li><span class="opt">B</span><span>Add DynamoDB DAX in front of the table</span></li>
+        <li><span class="opt">C</span><span>Re-architect reads to ElastiCache Redis</span></li>
+        <li><span class="opt">D</span><span>Add read replicas</span></li>
+      </ul>
+      <div class="answer"><span class="a-label">Correct Answer: B</span><p>DAX is DynamoDB-API-compatible (point the SDK at the DAX endpoint — minimal code change) and serves hot-item reads from memory at microsecond latency, absorbing the spike. ElastiCache requires significant code change; DynamoDB has no read replicas; over-provisioning RCUs is costly and still risks hot-partition limits.</p></div>
+    </div>
+
+    <div class="q-card">
+      <div class="q-num">Scenario 4</div>
+      <p class="q-stem">A Lambda in a private subnet downloads large files from S3 through a NAT Gateway. The monthly bill shows large NAT Gateway data processing charges. The team wants to cut this cost without changing application logic.</p>
+      <ul class="q-options">
+        <li><span class="opt">A</span><span>Move the Lambda to a public subnet</span></li>
+        <li><span class="opt">B</span><span>Add an S3 Gateway VPC Endpoint and route S3 traffic through it</span></li>
+        <li><span class="opt">C</span><span>Enable S3 Transfer Acceleration</span></li>
+        <li><span class="opt">D</span><span>Replace the NAT Gateway with a NAT instance</span></li>
+      </ul>
+      <div class="answer"><span class="a-label">Correct Answer: B</span><p>An S3 Gateway VPC Endpoint routes S3 traffic privately within the VPC, bypassing the NAT Gateway entirely — eliminating its per-GB data processing charges. The endpoint is free and requires no application change. A public subnet weakens security; Transfer Acceleration adds cost; a NAT instance still processes the data.</p></div>
+    </div>
+
+    <!-- QB-INSERT-MARKER -->
+
+  </div>
+  <div class="pg-footer">AWS Mastery Series &nbsp;|&nbsp; Book 3: DVA-C02 &nbsp;|&nbsp; Author: Faizan H.</div>
+</section>
+
+<!-- ===== FINAL PAGE ===== -->
+<section class="page final-page" id="final">
+  <div class="deco" style="width:900px;height:900px;top:-260px;left:-200px;"></div>
+  <div class="deco" style="width:1100px;height:1100px;bottom:-540px;right:-300px;border-color:rgba(255,153,0,.06);"></div>
+  <div class="final-inner">
+    <h2>You've Reached the <span class="o">End of the Series.</span></h2>
+    <p>Three books. From knowing nothing about the cloud to mastering the AWS Developer Associate exam. You now understand cloud fundamentals, the full developer services stack, and the advanced architecture, security, performance, and cost decisions that real systems demand. Book the exam. Walk in ready. You earned this.</p>
+    <div class="final-creds">
+      <div class="fc-k">Your credentials after this series</div>
+      <div class="fc-v">AWS Certified Cloud Practitioner<br/>AWS Certified Developer – Associate</div>
+    </div>
+    <p class="final-byline">by Faizan H. &nbsp;|&nbsp; AWS Mastery Series &nbsp;|&nbsp; First Edition &nbsp;|&nbsp; <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="85e6eaebf1e4e6f1c5e8e3ede4f6f6e4ebabf2eaf7ee">[email&#160;protected]</a></p>
+  </div>
+</section>
+
+<!-- CONTENT-INSERT-MARKER -->
+
+</main>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+(function(){
+  var links = Array.prototype.slice.call(document.querySelectorAll('.sb-link'));
+  var jump = document.getElementById('jumpSelect');
+
+  function goTo(id){
+    var el = document.getElementById(id);
+    if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+  }
+  // sidebar links + toc links + any [data-target]
+  document.addEventListener('click', function(e){
+    var t = e.target.closest('[data-target]');
+    if(t){ e.preventDefault(); goTo(t.getAttribute('data-target')); }
+  });
+  jump.addEventListener('change', function(){
+    if(jump.value){ goTo(jump.value); }
+  });
+
+  // active section highlighting via IntersectionObserver
+  var map = {};
+  links.forEach(function(l){ map[l.getAttribute('data-target')] = l; });
+  var sections = Array.prototype.slice.call(document.querySelectorAll('.page'));
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if(en.isIntersecting){
+        var id = en.target.id;
+        links.forEach(function(l){ l.classList.remove('active'); });
+        if(map[id]) {
+          map[id].classList.add('active');
+          // keep active link in view within sidebar
+          var sb = document.getElementById('sidebar');
+          var lr = map[id].getBoundingClientRect();
+          if(lr.top < 90 || lr.bottom > window.innerHeight - 20){
+            sb.scrollTop += lr.top - 200;
+          }
+        }
+      }
+    });
+  }, {rootMargin: '-40% 0px -55% 0px', threshold:0});
+  sections.forEach(function(s){ io.observe(s); });
+})();
+</script>
+</body>
+</html>
